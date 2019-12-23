@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>CLIENT_ID</key>
+        <string>210648783864-2afe47gmiokqte9m8fclns5pned5ei87.apps.googleusercontent.com</string>
+        <key>REVERSED_CLIENT_ID</key>
+        <string>com.googleusercontent.apps.210648783864-2afe47gmiokqte9m8fclns5pned5ei87</string>
+        <key>ANDROID_CLIENT_ID</key>
+        <string>210648783864-m3aui0seat6jrb0i0uhgsfs1mbvf82es.apps.googleusercontent.com</string>
+        <key>API_KEY</key>
+        <string>AIzaSyBuFB-L1hXC8wLBm3aLXGD5KVPKGXtmAPs</string>
+        <key>GCM_SENDER_ID</key>
+        <string>210648783864</string>
+        <key>PLIST_VERSION</key>
+        <string>1</string>
+        <key>BUNDLE_ID</key>
+        <string>com.digimagz</string>
+        <key>PROJECT_ID</key>
+        <string>digimagz-fccc4</string>
+        <key>STORAGE_BUCKET</key>
+        <string>digimagz-fccc4.appspot.com</string>
+        <key>IS_ADS_ENABLED</key>
+        <false></false>
+        <key>IS_ANALYTICS_ENABLED</key>
+        <false></false>
+        <key>IS_APPINVITE_ENABLED</key>
+        <true></true>
+        <key>IS_GCM_ENABLED</key>
+        <true></true>
+        <key>IS_SIGNIN_ENABLED</key>
+        <true></true>
+        <key>GOOGLE_APP_ID</key>
+        <string>1:210648783864:ios:7432855d58d1e09db2d40d</string>
+        <key>DATABASE_URL</key>
+        <string>https://digimagz-fccc4.firebaseio.com</string>
+    </dict>
+</plist>
