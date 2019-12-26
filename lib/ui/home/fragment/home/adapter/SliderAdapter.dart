@@ -24,7 +24,7 @@ class SliderItem extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   CachedNetworkImage(
-                    imageUrl: UrlUtils.getUrlForImage(news),
+                    imageUrl: UrlUtils.getUrlForImage(news, 0),
                     imageBuilder: (ctx, provider) => Container(
                       width: double.infinity,
                       height: double.infinity,

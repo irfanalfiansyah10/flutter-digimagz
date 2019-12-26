@@ -2,14 +2,11 @@ import 'package:digimagz/ancestor/BasePresenter.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:digimagz/network/response/NewsResponse.dart';
-import 'package:digimagz/ui/detail/story/DetailStoryDelegate.dart';
 
 class DetailStoryPresenter extends BasePresenter{
   static const REQUEST_GET_RELATED_NEWS = 0;
 
-  final DetailStoryDelegate _delegate;
-
-  DetailStoryPresenter(BaseState<BaseStatefulWidget> state, this._delegate) : super(state);
+  DetailStoryPresenter(BaseState state) : super(state);
 
   void executeGetRelatedNews(String idStory, RequestWrapper<NewsResponse> wrapper) async {
     wrapper.doRequest();

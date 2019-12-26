@@ -7,13 +7,13 @@ class UrlUtils{
   static const String URL_IMAGE_EMAGZ = "http://digimon.kristomoyo.com/emagazine/thumbnail/";
   static const String URL = "http://digimon.kristomoyo.com/";
 
-  static String getUrlForImage(News news){
+  static String getUrlForImage(News news, int position){
     if(news.nameCategory.toLowerCase() == "berita"){
-      return URL_IMAGE_NEWS+news.newsImage[0];
+      return URL_IMAGE_NEWS+news.newsImage[position];
     }else if(news.nameCategory.toLowerCase() == "artikel"){
-      return URL_IMAGE_NEWS+news.newsImage[0];
+      return URL_IMAGE_NEWS+news.newsImage[position];
     }else {
-      return URL_IMAGE_GALLERY+news.idNews+"/"+news.newsImage[0];
+      return URL_IMAGE_GALLERY+news.idNews+"/"+news.newsImage[position];
     }
   }
 }

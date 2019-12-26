@@ -1,4 +1,5 @@
 import 'package:digimagz/ancestor/BaseState.dart';
+import 'package:mcnmr_common_ext/FutureDelayed.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapperWidget.dart';
 import 'package:digimagz/network/response/YoutubeResponse.dart';
@@ -9,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class VideoFragment extends BaseStatefulWidget {
+class VideoFragment extends StatefulWidget {
 
   final state = _VideoFragmentState();
 
@@ -21,7 +22,8 @@ class VideoFragment extends BaseStatefulWidget {
   }
 }
 
-class _VideoFragmentState extends BaseState<VideoFragment> implements VideoFragmentDelegate{
+class _VideoFragmentState extends BaseState<VideoFragment>
+    implements VideoFragmentDelegate{
   VideoFragmentPresenter _presenter;
   RequestWrapper<YoutubeResponse> _youtubeWrapper = RequestWrapper();
 
@@ -30,26 +32,28 @@ class _VideoFragmentState extends BaseState<VideoFragment> implements VideoFragm
   @override
   void initState() {
     super.initState();
-    _presenter = VideoFragmentPresenter(this, this);
+    _presenter = VideoFragmentPresenter(this);
   }
 
   @override
-  void shouldHideLoading(int typeRequest) {
-
-  }
+  void shouldHideLoading(int typeRequest) {}
 
   @override
-  void shouldShowLoading(int typeRequest) {
+  void shouldShowLoading(int typeRequest) {}
 
-  }
+  @override
+  void onNoConnection(int typeRequest) => delay(5000, () => _presenter.executeGetVideo(_youtubeWrapper));
+
+  @override
+  void onRequestTimeOut(int typeRequest) => delay(5000, () => _presenter.executeGetVideo(_youtubeWrapper));
 
   @override
   void onPlayVideo(YoutubeVideo video) {
     FlutterYoutube.playYoutubeVideoByUrl(
-        apiKey: "AIzaSyBXmYa9XW8pUIVu3_jfZRH1GuloT8d1tgo",
-        videoUrl: "https://www.youtube.com/watch?v=${video.idVideo}",
-        autoPlay: true,
-        fullScreen: true
+      apiKey: "AIzaSyBXmYa9XW8pUIVu3_jfZRH1GuloT8d1tgo",
+      videoUrl: "https://www.youtube.com/watch?v=${video.idVideo}",
+      autoPlay: true,
+      fullScreen: true,
     );
   }
 
@@ -70,21 +74,28 @@ class _VideoFragmentState extends BaseState<VideoFragment> implements VideoFragm
 
   @override
   Widget build(BuildContext context) {
-    return RequestWrapperWidget(
-      requestWrapper: _youtubeWrapper,
-      placeholder: ListView.builder(
-        itemCount: 5,
-        shrinkWrap: true,
-        itemBuilder: (ctx, position) => ShimmerVideoItem(),
-      ),
-      builder: (ctx, response) {
-        var data = response as YoutubeResponse;
-        return ListView.builder(
-          itemCount: data.data.length,
-          shrinkWrap: true,
-          itemBuilder: (ctx, position) => VideoItem(data.data[position], this),
-        );
+    return RefreshIndicator(
+      onRefresh: () async {
+        _presenter.executeGetVideo(_youtubeWrapper);
       },
+      color: Colors.black,
+      backgroundColor: Colors.white,
+      child: RequestWrapperWidget(
+        requestWrapper: _youtubeWrapper,
+        placeholder: ListView.builder(
+          itemCount: 5,
+          shrinkWrap: true,
+          itemBuilder: (ctx, position) => ShimmerVideoItem(),
+        ),
+        builder: (ctx, response) {
+          var data = response as YoutubeResponse;
+          return ListView.builder(
+            itemCount: data.data.length,
+            shrinkWrap: true,
+            itemBuilder: (ctx, position) => VideoItem(data.data[position], this),
+          );
+        },
+      ),
     );
   }
 

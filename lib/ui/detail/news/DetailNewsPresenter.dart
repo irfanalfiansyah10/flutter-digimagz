@@ -17,7 +17,7 @@ class DetailNewsPresenter extends BasePresenter{
 
   final DetailNewsDelegate _delegate;
 
-  DetailNewsPresenter(BaseState<BaseStatefulWidget> state, this._delegate) : super(state);
+  DetailNewsPresenter(BaseState state, this._delegate) : super(state);
 
   void executeGetRelatedNews(String idNews, RequestWrapper<NewsResponse> wrapper) async {
     wrapper.doRequest();

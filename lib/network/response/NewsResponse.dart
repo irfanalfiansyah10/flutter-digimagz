@@ -59,7 +59,7 @@ class News {
     viewsCount = obtainValue(json["VIEWS_COUNT"], "");
     sharesCount = obtainValue(json["SHARES_COUNT"], "");
     dateNews = obtainValue(json["DATE_NEWS"], "");
-    likes = obtainValue(json["LIKES"], "");
+    likes = obtainValue(json["LIKES"], "0");
     comments = obtainValue(json["COMMENTS"], "");
     editor = obtainValue(json["EDITOR"], "");
     verificator = obtainValue(json["VERIFICATOR"], "");

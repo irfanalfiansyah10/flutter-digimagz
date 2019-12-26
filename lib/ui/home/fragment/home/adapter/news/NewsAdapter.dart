@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
+import 'package:digimagz/provider/LikeProvider.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapperWidget.dart';
 import 'package:digimagz/extension/Size.dart';
@@ -10,9 +11,10 @@ import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:digimagz/utilities/UrlUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-class NewsItem extends BaseStatefulWidget {
+class NewsItem extends StatefulWidget {
 
   final News news;
   final Function(News) onNewsSelected;
@@ -32,6 +34,11 @@ class _NewsItemState extends BaseState<NewsItem> {
   void initState() {
     super.initState();
     _presenter = NewsAdapterPresenter(this);
+    _likeWrapper.subscribeOnFinishedAndNonNull((r){
+      if(r){
+        Provider.of<LikeProvider>(context).alreadyLiked(widget.news);
+      }
+    });
   }
 
   @override
@@ -65,7 +72,7 @@ class _NewsItemState extends BaseState<NewsItem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               CachedNetworkImage(
-                imageUrl: UrlUtils.getUrlForImage(widget.news),
+                imageUrl: UrlUtils.getUrlForImage(widget.news, 0),
                 imageBuilder: (ctx, provider) => Container(
                   width: adaptiveWidth(context, 130),
                   height: adaptiveWidth(context, 130),
@@ -128,15 +135,15 @@ class _NewsItemState extends BaseState<NewsItem> {
                         RequestWrapperWidget(
                           requestWrapper: _likeWrapper,
                           placeholder: Icon(Icons.favorite_border, color: ColorUtils.primary),
-                          builder: (ctx, response){
-                            var isLiked = response as bool;
+                          builder: (ctx, response) => Consumer<LikeProvider>(
+                            builder: (_, provider, __){
+                              if(provider.likedNews.contains(widget.news.idNews)){
+                                return Icon(Icons.favorite, color: ColorUtils.primary);
+                              }
 
-                            if(isLiked){
-                              return Icon(Icons.favorite, color: ColorUtils.primary);
-                            }
-
-                            return Icon(Icons.favorite_border, color: ColorUtils.primary);
-                          },
+                              return Icon(Icons.favorite_border, color: ColorUtils.primary);
+                            },
+                          ),
                         ),
                         SizedBox(width: 5),
                         Text(widget.news.likes,

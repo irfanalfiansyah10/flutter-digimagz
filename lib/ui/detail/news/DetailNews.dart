@@ -1,26 +1,26 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
-import 'package:digimagz/extension/Size.dart';
 import 'package:digimagz/main.dart';
 import 'package:digimagz/network/response/CommentResponse.dart';
 import 'package:digimagz/network/response/NewsResponse.dart';
 import 'package:digimagz/network/response/UserResponse.dart';
 import 'package:digimagz/preferences/AppPreference.dart';
+import 'package:digimagz/provider/LikeProvider.dart';
 import 'package:digimagz/ui/detail/news/DetailNewsDelegate.dart';
 import 'package:digimagz/ui/detail/news/DetailNewsPresenter.dart';
 import 'package:digimagz/ui/detail/news/adapter/CommentAdapter.dart';
+import 'package:digimagz/ui/detail/news/adapter/ImageNewsAdapter.dart';
 import 'package:digimagz/ui/home/fragment/home/adapter/news/NewsAdapter.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
-import 'package:digimagz/utilities/UrlUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapperWidget.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-class DetailNews extends BaseStatefulWidget {
+class DetailNews extends StatefulWidget {
   final News news;
 
   DetailNews(this.news);
@@ -47,6 +47,14 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
     _presenter = DetailNewsPresenter(this, this);
     _presenter.executeGetRelatedNews(widget.news.idNews, _relatedNewsWrapper);
     _presenter.executeGetComment(widget.news.idNews, _commentWrapper);
+
+    _isLikedWrapper.subscribeOnFinishedAndNonNull((r){
+      if(r){
+        Provider.of<LikeProvider>(context).addLike(widget.news);
+      }else {
+        Provider.of<LikeProvider>(context).removeLike(widget.news);
+      }
+    });
   }
 
   @override
@@ -57,9 +65,7 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
       _isLikedWrapper.finishRequest(false);
     }else {
       _presenter.executeCheckLike(widget.news.idNews, _isLikedWrapper);
-      setState(() {
-        isUserLoggedIn = true;
-      });
+      setState(() => isUserLoggedIn = true);
     }
   }
 
@@ -159,26 +165,13 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
                   ],
                 ),
                 SizedBox(height: 10),
-                CachedNetworkImage(
-                  imageUrl: UrlUtils.getUrlForImage(widget.news),
-                  imageBuilder: (ctx, provider) => Container(
-                    width: double.infinity,
-                    height: adaptiveWidth(context, 200),
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: provider,
-                          fit: BoxFit.contain,
-                        )
-                    ),
-                  ),
-                  placeholder: (ctx, url) => Shimmer.fromColors(
-                      child: Container(
-                        width: double.infinity,
-                        height: adaptiveWidth(context, 200),
-                        color: Colors.grey[300],
-                      ),
-                      baseColor: Colors.grey[300],
-                      highlightColor: Colors.white
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: widget.news.newsImage.length,
+                  itemBuilder: (_, position) => ImageNewsItem(
+                    news: widget.news,
+                    position: position,
                   ),
                 ),
                 SizedBox(height: 20),
@@ -244,12 +237,14 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
                             baseColor: Colors.grey[300],
                             highlightColor: Colors.white,
                           ),
-                          builder: (ctx, data){
-                            if(data){
-                              return Icon(Icons.favorite, color: ColorUtils.primary);
-                            }
-                            return Icon(Icons.favorite_border, color: ColorUtils.primary);
-                          },
+                          builder: (ctx, data) => Consumer<LikeProvider>(
+                            builder: (_, provider, __){
+                              if(provider.likedNews.contains(widget.news.idNews)){
+                                return Icon(Icons.favorite, color: ColorUtils.primary);
+                              }
+                              return Icon(Icons.favorite_border, color: ColorUtils.primary);
+                            },
+                          ),
                         ),
                         onPressed: () {
                           if(user != null){

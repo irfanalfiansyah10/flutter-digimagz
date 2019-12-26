@@ -1,3 +1,4 @@
+import 'package:digimagz/provider/LikeProvider.dart';
 import 'package:digimagz/ui/detail/news/DetailNews.dart';
 import 'package:digimagz/ui/detail/story/DetailStory.dart';
 import 'package:digimagz/ui/home/Home.dart';
@@ -6,6 +7,7 @@ import 'package:digimagz/ui/login/Login.dart';
 import 'package:digimagz/ui/splash_screen/SplashScreen.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 //export PATH="$PATH:/Users/apple/Documents/flutter/bin"
 
@@ -21,32 +23,37 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: ColorUtils.primary,
-        primaryColorDark: ColorUtils.primaryDark,
-      ),
-      onGenerateRoute: (settings){
-        switch(settings.name){
-          case ROUTE_ROOT :
-            return MaterialPageRoute(builder: (ctx) => SplashScreen());
-          case ROUTE_HOME :
-            return MaterialPageRoute(builder: (ctx) => Home());
-          case ROUTE_LIST_NEWS :
-            return MaterialPageRoute(builder: (ctx) => ListNews(settings.arguments));
-          case ROUTE_LOGIN :
-            return MaterialPageRoute(builder: (ctx) => Login());
-          case ROUTE_DETAIL_NEWS :
-            return MaterialPageRoute(builder: (ctx) => DetailNews(settings.arguments));
-          case ROUTE_DETAIL_STORY :
-            return MaterialPageRoute(builder: (ctx) => DetailStory(settings.arguments));
-          default :
-            return MaterialPageRoute(builder: (ctx) => SplashScreen());
-        }
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<LikeProvider>(create: (_) => LikeProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: ColorUtils.primary,
+          primaryColorDark: ColorUtils.primaryDark,
+        ),
+        onGenerateRoute: (settings){
+          switch(settings.name){
+            case ROUTE_ROOT :
+              return MaterialPageRoute(builder: (ctx) => SplashScreen());
+            case ROUTE_HOME :
+              return MaterialPageRoute(builder: (ctx) => Home());
+            case ROUTE_LIST_NEWS :
+              return MaterialPageRoute(builder: (ctx) => ListNews(settings.arguments));
+            case ROUTE_LOGIN :
+              return MaterialPageRoute(builder: (ctx) => Login());
+            case ROUTE_DETAIL_NEWS :
+              return MaterialPageRoute(builder: (ctx) => DetailNews(settings.arguments));
+            case ROUTE_DETAIL_STORY :
+              return MaterialPageRoute(builder: (ctx) => DetailStory(settings.arguments));
+            default :
+              return MaterialPageRoute(builder: (ctx) => SplashScreen());
+          }
+        },
 
-      initialRoute: ROUTE_ROOT,
+        initialRoute: ROUTE_ROOT,
+      ),
     );
   }
 }

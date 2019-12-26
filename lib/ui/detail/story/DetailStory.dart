@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:shimmer/shimmer.dart';
 
-class DetailStory extends BaseStatefulWidget {
+class DetailStory extends StatefulWidget {
   final Story story;
 
   DetailStory(this.story);
@@ -31,7 +31,7 @@ class _DetailStoryState extends BaseState<DetailStory> implements DetailStoryDel
   @override
   void initState() {
     super.initState();
-    _presenter = DetailStoryPresenter(this, this);
+    _presenter = DetailStoryPresenter(this);
     _presenter.executeGetRelatedNews(widget.story.idCoverStory, _relatedNewsWrapper);
   }
 

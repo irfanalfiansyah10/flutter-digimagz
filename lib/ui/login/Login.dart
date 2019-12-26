@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class Login extends BaseStatefulWidget {
+class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }

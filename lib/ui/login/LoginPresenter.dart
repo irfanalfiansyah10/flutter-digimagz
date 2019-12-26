@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:digimagz/ancestor/BasePresenter.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/network/response/UserResponse.dart';
@@ -16,7 +13,7 @@ class LoginPresenter extends BasePresenter{
 
   final LoginDelegate _delegate;
 
-  LoginPresenter(BaseState<BaseStatefulWidget> state, this._delegate) : super(state);
+  LoginPresenter(BaseState state, this._delegate) : super(state);
 
 
   void executeSignInGoogle() async {

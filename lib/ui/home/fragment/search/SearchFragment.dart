@@ -1,4 +1,6 @@
 import 'package:digimagz/ancestor/BaseState.dart';
+import 'package:digimagz/provider/LikeProvider.dart';
+import 'package:mcnmr_common_ext/FutureDelayed.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapperWidget.dart';
 import 'package:digimagz/main.dart';
@@ -9,8 +11,9 @@ import 'package:digimagz/ui/home/fragment/search/SearchFragmentPresenter.dart';
 import 'package:digimagz/ui/list/news/ListNews.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class SearchFragment extends BaseStatefulWidget {
+class SearchFragment extends StatefulWidget {
   final state = _SearchFragmentState();
 
   @override
@@ -22,7 +25,8 @@ class SearchFragment extends BaseStatefulWidget {
 
 }
 
-class _SearchFragmentState extends BaseState<SearchFragment> implements SearchFragmentDelegate{
+class _SearchFragmentState extends BaseState<SearchFragment>
+    implements SearchFragmentDelegate{
   SearchFragmentPresenter _presenter;
   RequestWrapper<NewsResponse> _wrapper = RequestWrapper();
 
@@ -33,23 +37,22 @@ class _SearchFragmentState extends BaseState<SearchFragment> implements SearchFr
   @override
   void initState() {
     super.initState();
-    _presenter = SearchFragmentPresenter(this, this);
+    _presenter = SearchFragmentPresenter(this);
+
+    _wrapper.subscribeOnFinishedAndNonNull((r) => Provider.of<LikeProvider>(context).collect(r));
   }
 
   @override
-  void onNavigationResume(String from) {
-    visit();
-  }
+  void shouldHideLoading(int typeRequest) {}
 
   @override
-  void shouldHideLoading(int typeRequest) {
-
-  }
+  void shouldShowLoading(int typeRequest) {}
 
   @override
-  void shouldShowLoading(int typeRequest) {
+  void onRequestTimeOut(int typeRequest) => delay(5000, () => _presenter.executeGetNews(_wrapper));
 
-  }
+  @override
+  void onNoConnection(int typeRequest) => delay(5000, () => _presenter.executeGetNews(_wrapper));
 
   @override
   void onNewsSelected(News news) {
@@ -75,8 +78,7 @@ class _SearchFragmentState extends BaseState<SearchFragment> implements SearchFr
                       textInputAction: TextInputAction.search,
                       controller: _searchController,
                       onFieldSubmitted: (value){
-                        navigateTo(MyApp.ROUTE_LIST_NEWS,
-                            arguments: ListNewsArgument(query: value));
+                        navigateTo(MyApp.ROUTE_LIST_NEWS, arguments: ListNewsArgument(query: value));
                       },
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(top: 15, bottom: 15, left: 15, right: 35),
@@ -118,39 +120,46 @@ class _SearchFragmentState extends BaseState<SearchFragment> implements SearchFr
             ],
           ),
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.all(15),
-                    child: Text("Rekomendasi",
-                        textScaleFactor: 1.0,
-                        style: TextStyle(
-                            fontSize: 22
-                        )),
-                  ),
-                  RequestWrapperWidget(
-                    requestWrapper: _wrapper,
-                    placeholder: ListView.builder(
-                      itemCount: 5,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (ctx, position) => ShimmerNewsItem(),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                _presenter.executeGetNews(_wrapper);
+              },
+              color: Colors.black,
+              backgroundColor: Colors.white,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.all(15),
+                      child: Text("Rekomendasi",
+                          textScaleFactor: 1.0,
+                          style: TextStyle(
+                              fontSize: 22
+                          )),
                     ),
-                    builder: (ctx, response){
-                      var data = response as NewsResponse;
-
-                      return ListView.builder(
-                        itemCount: data.data.length,
-                        shrinkWrap: true,
+                    RequestWrapperWidget(
+                      requestWrapper: _wrapper,
+                      placeholder: ListView.builder(
+                        itemCount: 5,
                         physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (ctx, position) => NewsItem(data.data[position], onNewsSelected),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 10),
-                ],
+                        shrinkWrap: true,
+                        itemBuilder: (ctx, position) => ShimmerNewsItem(),
+                      ),
+                      builder: (ctx, response){
+                        var data = response as NewsResponse;
+
+                        return ListView.builder(
+                          itemCount: data.data.length,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (ctx, position) => NewsItem(data.data[position], onNewsSelected),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
               ),
             ),
           )
@@ -160,6 +169,9 @@ class _SearchFragmentState extends BaseState<SearchFragment> implements SearchFr
   }
 
   void visit(){
-    _presenter.executeGetNews(_wrapper);
+    if(isFirstVisit) {
+      _presenter.executeGetNews(_wrapper);
+      isFirstVisit = false;
+    }
   }
 }

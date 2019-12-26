@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shimmer/shimmer.dart';
 
-class ProfileFragment extends BaseStatefulWidget {
+class ProfileFragment extends StatefulWidget {
 
   final state = _ProfileFragmentState();
 

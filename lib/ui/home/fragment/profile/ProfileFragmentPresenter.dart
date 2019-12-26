@@ -14,7 +14,7 @@ class ProfileFragmentPresenter extends BasePresenter{
 
   final ProfileFragmentDelegate _delegate;
 
-  ProfileFragmentPresenter(BaseState<BaseStatefulWidget> state, this._delegate) : super(state);
+  ProfileFragmentPresenter(BaseState state, this._delegate) : super(state);
 
   void getAccount(RequestWrapper<User> userWrapper) async {
     userWrapper.doRequestKeepState();

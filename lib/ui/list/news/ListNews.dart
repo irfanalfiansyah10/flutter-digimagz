@@ -1,4 +1,6 @@
 import 'package:digimagz/ancestor/BaseState.dart';
+import 'package:digimagz/provider/LikeProvider.dart';
+import 'package:mcnmr_common_ext/FutureDelayed.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapperWidget.dart';
 import 'package:digimagz/main.dart';
@@ -6,6 +8,7 @@ import 'package:digimagz/network/response/NewsResponse.dart';
 import 'package:digimagz/ui/home/fragment/home/adapter/news/NewsAdapter.dart';
 import 'package:digimagz/ui/list/news/ListNewsDelegate.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'ListNewsPresenter.dart';
 
@@ -16,7 +19,7 @@ class ListNewsArgument{
   ListNewsArgument({this.isFavorit = false, this.query = ""});
 }
 
-class ListNews extends BaseStatefulWidget {
+class ListNews extends StatefulWidget {
   final ListNewsArgument argument;
 
   ListNews(this.argument);
@@ -34,17 +37,21 @@ class _ListNewsState extends BaseState<ListNews> implements ListNewsDelegate{
     super.initState();
     _presenter = ListNewsPresenter(this);
     _presenter.executeGetNews(widget.argument, _wrapper);
+
+    _wrapper.subscribeOnFinishedAndNonNull((r) => Provider.of<LikeProvider>(context).collect(r));
   }
 
   @override
-  void shouldHideLoading(int typeRequest) {
-
-  }
+  void shouldHideLoading(int typeRequest) {}
 
   @override
-  void shouldShowLoading(int typeRequest) {
+  void shouldShowLoading(int typeRequest) {}
 
-  }
+  @override
+  void onRequestTimeOut(int typeRequest) => delay(5000, () => _presenter.executeGetNews(widget.argument, _wrapper));
+
+  @override
+  void onNoConnection(int typeRequest) => delay(5000, () => _presenter.executeGetNews(widget.argument, _wrapper));
 
   @override
   void onNewsSelected(News news) {
@@ -67,23 +74,25 @@ class _ListNewsState extends BaseState<ListNews> implements ListNewsDelegate{
           },
         ),
       ),
-      body: SafeArea(
-        child: RequestWrapperWidget(
-            requestWrapper: _wrapper,
-            placeholder: ListView.builder(
-                itemCount: 5,
-                padding: EdgeInsets.all(15),
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (ctx, position) => ShimmerNewsItem()),
-            builder: (ctx, response){
-              var data = response as NewsResponse;
-              return ListView.builder(
-                  itemCount: data.data.length,
-                  padding: EdgeInsets.all(15),
-                  shrinkWrap: true,
-                  itemBuilder: (ctx, position) => NewsItem(data.data[position], onNewsSelected));
-            }),
+      body: RequestWrapperWidget<NewsResponse>(
+        requestWrapper: _wrapper,
+        placeholder: ListView.builder(
+          itemCount: 5,
+          padding: EdgeInsets.all(15),
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (ctx, position) => ShimmerNewsItem(),
+        ),
+        builder: (ctx, response) => RefreshIndicator(
+          onRefresh: () async => _presenter.executeGetNews(widget.argument, _wrapper),
+          color: Colors.black,
+          backgroundColor: Colors.white,
+          child: ListView.builder(
+            itemCount: response.data.length,
+            padding: EdgeInsets.all(15),
+            physics: BouncingScrollPhysics(),
+            itemBuilder: (ctx, position) => NewsItem(response.data[position], onNewsSelected),
+          ),
+        ),
       ),
     );
   }

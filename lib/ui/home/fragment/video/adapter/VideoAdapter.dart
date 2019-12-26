@@ -16,7 +16,6 @@ class VideoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Video Url : ${video.urlDefaultThumbnail}");
     return Card(
       clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.all(15),

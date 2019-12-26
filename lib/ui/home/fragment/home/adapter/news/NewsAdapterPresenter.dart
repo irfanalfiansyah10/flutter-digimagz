@@ -8,7 +8,7 @@ import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 class NewsAdapterPresenter extends BasePresenter{
   static const REQUEST_CHECK_LIKE = 0;
 
-  NewsAdapterPresenter(BaseState<BaseStatefulWidget> state) : super(state);
+  NewsAdapterPresenter(BaseState state) : super(state);
 
   void executeCheckLike(RequestWrapper<bool> wrapper, String email, String idNews) async {
     wrapper.doRequestKeepState();

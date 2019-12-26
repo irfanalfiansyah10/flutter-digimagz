@@ -3,7 +3,6 @@ import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:digimagz/network/response/NewsResponse.dart';
 import 'package:digimagz/network/response/StoryResponse.dart';
-import 'package:digimagz/ui/home/fragment/home/HomeFragmentDelegate.dart';
 import 'package:dio/dio.dart';
 
 class HomeFragmentPresenter extends BasePresenter{
@@ -12,12 +11,10 @@ class HomeFragmentPresenter extends BasePresenter{
   static const REQUEST_GET_STORY = 2;
   static const REQUEST_GET_NEWS = 3;
 
-  final HomeFragmentDelegate _delegate;
-
   CancelToken _trendingToken;
   CancelToken _newsToken;
 
-  HomeFragmentPresenter(BaseState<BaseStatefulWidget> state, this._delegate) : super(state);
+  HomeFragmentPresenter(BaseState state) : super(state);
 
   void executeGetSlider(RequestWrapper<NewsResponse> wrapper) async {
     wrapper.doRequest();

@@ -7,7 +7,7 @@ import 'package:digimagz/ui/list/news/ListNews.dart';
 class ListNewsPresenter extends BasePresenter{
   static const REQUEST_GET_NEWS = 0;
 
-  ListNewsPresenter(BaseState<BaseStatefulWidget> state) : super(state);
+  ListNewsPresenter(BaseState state) : super(state);
 
   void executeGetNews(ListNewsArgument argument, RequestWrapper<NewsResponse> wrapper) async {
     if(argument.isFavorit){

@@ -12,7 +12,7 @@ import 'package:digimagz/network/response/YoutubeResponse.dart';
 import 'package:dio/dio.dart';
 
 class Repository extends BaseRepository {
-  Repository(BaseState<BaseStatefulWidget> baseState) : super(baseState);
+  Repository(BaseState baseState) : super(baseState);
 
   Future<NewsResponse> getNews(int typeRequest, {CancelToken cancelToken}) async {
     var response = await get("dummy/index_get", null, typeRequest, cancelToken: cancelToken);

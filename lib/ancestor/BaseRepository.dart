@@ -1,21 +1,19 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:digimagz/network/response/BaseResponse.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
 import 'BaseState.dart';
 
 class BaseRepository{
 
+  static const GET = 0;
+  static const POST = 1;
+  static const PUT = 2;
+  static const DELETE = 3;
+
   BaseState _baseState;
 
   Dio dio = Dio();
-
-  int _typeRequest = -1;
 
   BaseRepository(this._baseState, {String baseUrl}){
     dio.interceptors.add(LogInterceptor(responseBody: true));
@@ -34,98 +32,61 @@ class BaseRepository{
     return connectionStatus != ConnectivityResult.none;
   }
 
-  Future<Response<String>> get(String url, Map<String, String> params,
-      int typeRequest, {CancelToken cancelToken}) async {
-    _typeRequest = typeRequest;
-
-    _baseState.shouldShowLoading(typeRequest);
-
-    var isConnected = await connectivityChecker();
-    if(!isConnected){
-      _baseState.shouldHideLoading(typeRequest);
-      _baseState.onNoConnection(typeRequest);
-      return null;
-    }
-
-    try{
-      Response<String> response = await dio.get<String>(url, queryParameters: params, cancelToken: cancelToken);
-
-      _baseState.shouldHideLoading(typeRequest);
-      return response;
-    } on DioError catch(e){
-      if(e.type != DioErrorType.CANCEL) {
-        _baseState.shouldHideLoading(typeRequest);
-        _baseState.onUnknownError(typeRequest, e.message);
-      }
-    }
-
-    return null;
+  Future<Response<String>> get(String url,
+      Map<String, String> params,
+      int typeRequest,
+      {
+        CancelToken cancelToken,
+        String contentType = "application/json"
+      }) {
+    return _execute(GET, url, params, typeRequest, cancelToken: cancelToken, contentType: contentType);
   }
 
-  Future<Response<String>> post(String url, Map<String, dynamic> params, int typeRequest,
-      {CancelToken cancelToken, String contentType = "application/json"}) async {
-    _typeRequest = typeRequest;
-
-    _baseState.shouldShowLoading(typeRequest);
-
-    var isConnected = await connectivityChecker();
-    if(!isConnected){
-      _baseState.shouldHideLoading(typeRequest);
-      _baseState.onNoConnection(typeRequest);
-      return null;
-    }
-
-    try{
-      Response<String> response = await dio.post<String>(url, data: params, options: Options(
-          contentType: contentType
-      ), cancelToken: cancelToken);
-
-      _baseState.shouldHideLoading(typeRequest);
-      return response;
-    } on DioError catch(e){
-      if(e.type != DioErrorType.CANCEL) {
-        _baseState.shouldHideLoading(typeRequest);
-        _baseState.onUnknownError(typeRequest, e.message);
-      }
-    }
-
-    return null;
+  Future<Response<String>> post(String url,
+      Map<String, dynamic> params,
+      int typeRequest,
+      {
+        CancelToken cancelToken,
+        String contentType = "application/json"
+      }){
+    return _execute(POST, url, params, typeRequest, cancelToken: cancelToken, contentType: contentType);
   }
 
-  Future<Response<String>> delete(String url, Map<String, dynamic> params, int typeRequest,
-      {CancelToken cancelToken, String contentType = "application/json"}) async {
-    _typeRequest = typeRequest;
-
-    _baseState.shouldShowLoading(typeRequest);
-
-    var isConnected = await connectivityChecker();
-    if(!isConnected){
-      _baseState.shouldHideLoading(typeRequest);
-      _baseState.onNoConnection(typeRequest);
-      return null;
-    }
-
-    try{
-      Response<String> response = await dio.delete<String>(url, data: params, options: Options(
-          contentType: contentType
-      ), cancelToken: cancelToken);
-
-      _baseState.shouldHideLoading(typeRequest);
-      return response;
-    } on DioError catch(e){
-      if(e.type != DioErrorType.CANCEL) {
-        _baseState.shouldHideLoading(typeRequest);
-        _baseState.onUnknownError(typeRequest, e.message);
-      }
-    }
-
-    return null;
+  Future<Response<String>> delete(String url,
+      Map<String, dynamic> params,
+      int typeRequest,
+      {
+        CancelToken cancelToken,
+        String contentType = "application/json"
+      }) {
+    return _execute(DELETE, url, params, typeRequest, cancelToken: cancelToken, contentType: contentType);
   }
 
-  Future<Response<String>> put(String url, Map<String, dynamic> params, int typeRequest,
-      {CancelToken cancelToken, String contentType = "application/json"}) async {
-    _typeRequest = typeRequest;
+  Future<Response<String>> put(String url,
+      Map<String, dynamic> params,
+      int typeRequest,
+      {
+        CancelToken cancelToken,
+        String contentType = "application/json"
+      }) {
+    return _execute(PUT, url, params, typeRequest, cancelToken: cancelToken, contentType: contentType);
+  }
 
+  Future<Response<String>> formData(String url,
+      Map<String, dynamic> params,
+      int typeRequest,
+      {
+        CancelToken cancelToken,
+        String contentType = "multipart/form-data"
+      }){
+    return _execute(POST, url, params, typeRequest,
+        cancelToken: cancelToken,
+        contentType: contentType,
+        isFormData: true);
+  }
+
+  Future<Response<String>> _execute(int method, String url, Map<String, dynamic> params,
+      int typeRequest, { CancelToken cancelToken, String contentType = "application/json", bool isFormData = false}) async {
     _baseState.shouldShowLoading(typeRequest);
 
     var isConnected = await connectivityChecker();
@@ -136,9 +97,34 @@ class BaseRepository{
     }
 
     try{
-      Response<String> response = await dio.put<String>(url, data: params, options: Options(
-          contentType: contentType
-      ), cancelToken: cancelToken);
+      Response<String> response;
+
+      if(method == GET){
+        response = await dio.get<String>(url, queryParameters: params, options: Options(
+            contentType: contentType
+        ), cancelToken: cancelToken);
+      }else if(method == POST){
+        if(isFormData){
+          var formData = FormData.fromMap(params);
+          response = await dio.post<String>(url, data: formData, options: Options(
+            contentType: contentType,
+          ), cancelToken: cancelToken);
+        }else {
+          response = await dio.post<String>(url, data: params, options: Options(
+            contentType: contentType,
+          ), cancelToken: cancelToken);
+        }
+      }else if(method == PUT){
+        response = await dio.put<String>(url, data: params, options: Options(
+            contentType: contentType
+        ), cancelToken: cancelToken);
+      }else if(method == DELETE){
+        response = await dio.delete<String>(url, data: params, options: Options(
+            contentType: contentType
+        ), cancelToken: cancelToken);
+      }else {
+        return null;
+      }
 
       var baseResponse = BaseResponse.fromJson(jsonDecode(response.data));
       if(!baseResponse.status){
@@ -149,9 +135,17 @@ class BaseRepository{
       return response;
     } on DioError catch(e){
       if(e.type != DioErrorType.CANCEL) {
-        _baseState.shouldHideLoading(typeRequest);
-        _baseState.onUnknownError(typeRequest, e.message);
+        if(e.message.contains("SocketException")){
+          _baseState.shouldHideLoading(typeRequest);
+          _baseState.onNoConnection(typeRequest);
+        }else {
+          _baseState.shouldHideLoading(typeRequest);
+          _baseState.onUnknownError(typeRequest, e.message);
+        }
       }
+    } on ResponseException catch(e){
+      _baseState.shouldHideLoading(typeRequest);
+      _baseState.onResponseError(typeRequest, e);
     }
 
     return null;
