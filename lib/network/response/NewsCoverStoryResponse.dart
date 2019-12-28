@@ -19,7 +19,7 @@ class NewsCoverStory {
   String contentNews;
   String titleNews;
   String dateNews;
-  String newsImage;
+  List<String> newsImage;
   String viewsCount;
   String likes;
   String comments;
@@ -33,12 +33,16 @@ class NewsCoverStory {
     contentNews = obtainValue(json["CONTENT_NEWS"], "");
     titleNews = obtainValue(json["TITLE_NEWS"], "");
     dateNews = obtainValue(json["DATE_NEWS"], "");
-    newsImage = obtainValue(json["NEWS_IMAGE"], "");
     viewsCount = obtainValue(json["VIEWS_COUNT"], "");
     likes = obtainValue(json["LIKES"], "");
     comments = obtainValue(json["COMMENTS"], "");
     sharesCount = obtainValue(json["SHARES_COUNT"], "");
     idCoverStory = obtainValue(json["ID_COVERSTORY"], "");
     titleCoverStory = obtainValue(json["TITLE_COVERSTORY"], "");
+
+    newsImage = List();
+    if(json["NEWS_IMAGE"] != null){
+      json["NEWS_IMAGE"].forEach((it) => newsImage.add(it));
+    }
   }
 }

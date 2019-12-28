@@ -1,10 +1,10 @@
-import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:flutter/material.dart';
 
 class PageIndicator extends StatelessWidget {
   final bool _isActive;
+  final Color activeColor;
 
-  PageIndicator(this._isActive);
+  PageIndicator(this._isActive, {this.activeColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class PageIndicator extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.white),
-          color: _isActive ? Colors.white : Colors.grey
+          color: _isActive ? activeColor : Colors.grey
       ),
     );
   }

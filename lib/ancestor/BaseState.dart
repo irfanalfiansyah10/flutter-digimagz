@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:digimagz/custom/dialog/LoadingDialog.dart';
 import 'package:digimagz/extension/ErrorMessaging.dart';
 import 'package:digimagz/network/response/BaseResponse.dart';
-import 'package:digimagz/utilities/ColorUtils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 abstract class BaseState<T extends StatefulWidget> extends State<T> {
 
@@ -121,15 +124,26 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
     );
   }
 
-  void alert(String title, String message,
-      String negativeAction,
-      String positiveAction,
-      VoidCallback onNegative,
-      VoidCallback onPositive,
-      {
-        Color negativeColor = Colors.grey,
-        Color positiveColor = ColorUtils.primary
-      }){
+  void alert({String title = "Error", String message = "Something went wrong", String negativeTitle,
+    String positiveTitle, VoidCallback onNegative, VoidCallback onPositive,
+    Color negativeColor = Colors.grey, Color positiveColor = Colors.blue}){
+    if(Platform.isIOS){
+      iOSAlert(title: title, message: message,
+          negativeTitle: negativeTitle, positiveTitle: positiveTitle,
+          onNegative: onNegative, onPositive: onPositive,
+          negativeColor: negativeColor, positiveColor: positiveColor);
+    }else if(Platform.isAndroid){
+      androidAlert(title: title, message: message,
+          negativeTitle: negativeTitle, positiveTitle: positiveTitle,
+          onNegative: onNegative, onPositive: onPositive,
+          negativeColor: negativeColor, positiveColor: positiveColor);
+    }else {
+      Fluttertoast.showToast(msg: message);
+    }
+  }
+
+  void androidAlert({String title, String message, String negativeTitle, String positiveTitle,
+    VoidCallback onNegative, VoidCallback onPositive, Color negativeColor, Color positiveColor}){
     showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -139,27 +153,69 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
           content: Text(message,
               style: TextStyle(fontSize: 16,
                   color: Colors.black)),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(negativeAction,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500,
-                      color: negativeColor)),
-              onPressed: (){
-                onNegative();
-              },
-            ),
-
-            FlatButton(
-              child: Text(positiveAction,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500,
-                      color: positiveColor)),
-              onPressed: (){
-                onPositive();
-              },
-            )
-          ],
+          actions: _alertActions(negativeTitle, positiveTitle, onNegative,
+              onPositive, negativeColor, positiveColor),
         )
     );
+  }
+
+  void iOSAlert({String title, String message, String negativeTitle, String positiveTitle,
+    VoidCallback onNegative, VoidCallback onPositive, Color negativeColor, Color positiveColor}){
+    showDialog(
+        context: context,
+        builder: (ctx) => CupertinoAlertDialog(
+          title: Text(title,
+              style: TextStyle(fontSize: 20,
+                  fontWeight: FontWeight.w500, color: Colors.black)),
+          content: Text(message,
+              style: TextStyle(fontSize: 16,
+                  color: Colors.black)),
+          actions: _alertActions(negativeTitle, positiveTitle, onNegative,
+              onPositive, negativeColor, positiveColor),
+        )
+    );
+  }
+
+  List<Widget> _alertActions(String negativeTitle, String positiveTitle, VoidCallback onNegative,
+      VoidCallback onPositive, Color negativeColor,
+      Color positiveColor){
+    var actions = <Widget>[];
+
+    if(negativeTitle != null){
+      if(Platform.isIOS){
+        actions.add(CupertinoDialogAction(
+          child: Text(negativeTitle),
+          onPressed: onNegative ?? () => finish(),
+          isDefaultAction: true,
+        ));
+      }else {
+        actions.add(FlatButton(
+          child: Text(negativeTitle,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500,
+                  color: negativeColor)),
+          onPressed: onNegative ?? () => finish(),
+        ));
+      }
+    }
+
+    if(positiveTitle != null){
+      if(Platform.isIOS){
+        actions.add(CupertinoDialogAction(
+          child: Text(positiveTitle),
+          onPressed: onPositive ?? () => finish(),
+          isDefaultAction: true,
+        ));
+      }else {
+        actions.add(FlatButton(
+          child: Text(positiveTitle,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500,
+                  color: positiveColor)),
+          onPressed: onPositive ?? () => finish(),
+        ));
+      }
+    }
+
+    return actions;
   }
 }
 

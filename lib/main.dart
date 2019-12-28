@@ -4,6 +4,7 @@ import 'package:digimagz/ui/detail/story/DetailStory.dart';
 import 'package:digimagz/ui/home/Home.dart';
 import 'package:digimagz/ui/list/news/ListNews.dart';
 import 'package:digimagz/ui/login/Login.dart';
+import 'package:digimagz/ui/login_email/LoginEmail.dart';
 import 'package:digimagz/ui/splash_screen/SplashScreen.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
   static const ROUTE_LOGIN = "/login";
   static const ROUTE_DETAIL_NEWS = "/detailNews";
   static const ROUTE_DETAIL_STORY = "/detailStory";
+  static const ROUTE_LOGIN_EMAIL = "/loginEmail";
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: ColorUtils.primary,
           primaryColorDark: ColorUtils.primaryDark,
+          primaryColorLight: Colors.white
         ),
         onGenerateRoute: (settings){
           switch(settings.name){
@@ -47,6 +50,8 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(builder: (ctx) => DetailNews(settings.arguments));
             case ROUTE_DETAIL_STORY :
               return MaterialPageRoute(builder: (ctx) => DetailStory(settings.arguments));
+            case ROUTE_LOGIN_EMAIL :
+              return MaterialPageRoute(builder: (ctx) => LoginEmail());
             default :
               return MaterialPageRoute(builder: (ctx) => SplashScreen());
           }

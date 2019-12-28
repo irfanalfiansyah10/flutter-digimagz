@@ -44,8 +44,10 @@ dependencies:
   flutter_widget_from_html:
   mcnmr_request_wrapper:
   mcnmr_common_ext:
+  mcnmr_wrap_height_gridview:
   pull_to_refresh:
   provider: 4.0.0
+  carousel_slider:
 
 dev_dependencies:
   flutter_test:

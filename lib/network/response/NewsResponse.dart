@@ -28,6 +28,7 @@ class NewsResponse extends BaseResponse{
       news.dateNews = i.dateNews;
       news.likes = i.likes;
       news.comments = i.comments;
+      news.newsImage = i.newsImage;
 
       data.add(news);
     }

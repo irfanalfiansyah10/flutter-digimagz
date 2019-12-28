@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
+import 'package:digimagz/custom/view/text/StyledText.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapperWidget.dart';
 import 'package:digimagz/extension/Size.dart';
@@ -36,14 +37,10 @@ class _DetailStoryState extends BaseState<DetailStory> implements DetailStoryDel
   }
 
   @override
-  void shouldHideLoading(int typeRequest) {
-
-  }
+  void shouldHideLoading(int typeRequest) {}
 
   @override
-  void shouldShowLoading(int typeRequest) {
-
-  }
+  void shouldShowLoading(int typeRequest) {}
 
   @override
   void onNewsSelected(News news) {
@@ -77,31 +74,43 @@ class _DetailStoryState extends BaseState<DetailStory> implements DetailStoryDel
                   width: double.infinity,
                   height: adaptiveWidth(context, 230),
                   decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: provider,
-                        fit: BoxFit.fill,
-                      )
+                    image: DecorationImage(
+                      image: provider,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
                 placeholder: (ctx, url) => Shimmer.fromColors(
-                    child: Container(
-                      width: double.infinity,
-                      height: adaptiveWidth(context, 230),
-                      color: Colors.grey[300],
-                    ),
-                    baseColor: Colors.grey[300],
-                    highlightColor: Colors.white
+                  child: Container(
+                    width: double.infinity,
+                    height: adaptiveWidth(context, 230),
+                    color: Colors.grey[300],
+                  ),
+                  baseColor: Colors.grey[300],
+                  highlightColor: Colors.white,
                 ),
               ),
               HtmlWidget(widget.story.summary),
               Container(
                 margin: EdgeInsets.all(10),
-                child: Text("1 Story Pilihan",
-                  textScaleFactor: 1.0,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                child: RequestWrapperWidget<NewsResponse>(
+                  requestWrapper: _relatedNewsWrapper,
+                  placeholder: Shimmer.fromColors(
+                    child: Container(
+                      color: Colors.grey[300],
+                      height: adaptiveWidth(context, 16),
+                      width: adaptiveWidth(context, 120),
+                    ),
+                    baseColor: Colors.grey[300],
+                    highlightColor: Colors.white,
+                  ),
+                  builder: (_, data) => StyledText("${data.data.length} Story Pilihan",
+                    size: adaptiveWidth(context, 16),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-              RequestWrapperWidget(
+              RequestWrapperWidget<NewsResponse>(
                 requestWrapper: _relatedNewsWrapper,
                 placeholder: ListView.builder(
                   itemCount: 5,
@@ -110,17 +119,13 @@ class _DetailStoryState extends BaseState<DetailStory> implements DetailStoryDel
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (ctx, position) => ShimmerNewsItem(),
                 ),
-                builder: (ctx, response){
-                  var data = response as NewsResponse;
-
-                  return ListView.builder(
-                    itemCount: data.data.length,
-                    shrinkWrap: true,
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (ctx, position) => NewsItem(data.data[position], onNewsSelected),
-                  );
-                },
+                builder: (_, data) => ListView.builder(
+                  itemCount: data.data.length,
+                  shrinkWrap: true,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (ctx, position) => NewsItem(data.data[position], onNewsSelected),
+                ),
               )
             ],
           ),

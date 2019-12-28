@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
+import 'package:digimagz/network/response/BaseResponse.dart';
 import 'package:digimagz/provider/LikeProvider.dart';
+import 'package:mcnmr_common_ext/FutureDelayed.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
-import 'package:mcnmr_request_wrapper/RequestWrapperWidget.dart';
 import 'package:digimagz/extension/Size.dart';
 import 'package:digimagz/network/response/NewsResponse.dart';
-import 'package:digimagz/preferences/AppPreference.dart';
 import 'package:digimagz/ui/home/fragment/home/adapter/news/NewsAdapterPresenter.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:digimagz/utilities/UrlUtils.dart';
@@ -42,23 +42,28 @@ class _NewsItemState extends BaseState<NewsItem> {
   }
 
   @override
-  void shouldShowLoading(int typeRequest) {
-
-  }
+  void afterWidgetBuilt() => _presenter.executeCheckLike(_likeWrapper, widget.news.idNews);
 
   @override
-  void shouldHideLoading(int typeRequest) {
+  void shouldShowLoading(int typeRequest) {}
 
-  }
+  @override
+  void shouldHideLoading(int typeRequest) {}
+
+  @override
+  void onRequestTimeOut(int typeRequest) => delay(5000,
+          () => _presenter.executeCheckLike(_likeWrapper, widget.news.idNews));
+
+  @override
+  void onNoConnection(int typeRequest) => delay(5000,
+          () => _presenter.executeCheckLike(_likeWrapper, widget.news.idNews));
+
+
+  @override
+  void onResponseError(int typeRequest, ResponseException exception) {}
 
   @override
   Widget build(BuildContext context) {
-    AppPreference.getUser().then((value){
-      if(value != null){
-        _presenter.executeCheckLike(_likeWrapper, value .email, widget.news.idNews);
-      }
-    });
-
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -132,25 +137,23 @@ class _NewsItemState extends BaseState<NewsItem> {
 
                         SizedBox(width: 10),
 
-                        RequestWrapperWidget(
-                          requestWrapper: _likeWrapper,
-                          placeholder: Icon(Icons.favorite_border, color: ColorUtils.primary),
-                          builder: (ctx, response) => Consumer<LikeProvider>(
-                            builder: (_, provider, __){
-                              if(provider.likedNews.contains(widget.news.idNews)){
-                                return Icon(Icons.favorite, color: ColorUtils.primary);
-                              }
+                        Consumer<LikeProvider>(
+                          builder: (_, provider, __){
+                            if(provider.likedNews.contains(widget.news.idNews)){
+                              return Icon(Icons.favorite, color: ColorUtils.primary);
+                            }
 
-                              return Icon(Icons.favorite_border, color: ColorUtils.primary);
-                            },
-                          ),
+                            return Icon(Icons.favorite_border, color: ColorUtils.primary);
+                          },
                         ),
                         SizedBox(width: 5),
-                        Text(widget.news.likes,
-                          textScaleFactor: 1.0,
-                          style: TextStyle(
+                        Consumer<LikeProvider>(
+                          builder: (_, provider, __) => Text(provider.getNumberOfLike(widget.news),
+                            textScaleFactor: 1.0,
+                            style: TextStyle(
                               color: Colors.grey,
-                              fontSize: 12
+                              fontSize: 12,
+                            ),
                           ),
                         ),
 

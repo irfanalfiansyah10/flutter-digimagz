@@ -40,4 +40,19 @@ class LikeProvider extends ChangeNotifier{
     likedNews.remove(news.idNews);
     notifyListeners();
   }
+
+  String getNumberOfLike(News news){
+    if(totalLikeMap.containsKey(news.idNews)){
+      return totalLikeMap[news.idNews].toString();
+    }
+
+    return "0";
+  }
+
+  void clear(){
+    totalLikeMap.clear();
+    likedNews.clear();
+
+    notifyListeners();
+  }
 }

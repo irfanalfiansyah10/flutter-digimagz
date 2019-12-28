@@ -55,19 +55,19 @@ class _LoginState extends BaseState<Login> implements LoginDelegate{
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/canvas.png"),
-                fit: BoxFit.fill,
-              )
+            image: DecorationImage(
+              image: AssetImage("assets/images/canvas.png"),
+              fit: BoxFit.fill,
+            ),
           ),
           child: Center(
             child: Container(
               width: adaptiveWidth(context, 250),
-              height: adaptiveWidth(context, 200),
               child: Card(
                 child: Padding(
-                  padding: EdgeInsets.all(15),
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 40),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text("Please Sign In",
@@ -78,6 +78,26 @@ class _LoginState extends BaseState<Login> implements LoginDelegate{
                         ),
                       ),
                       SizedBox(height: 10),
+                      FlatButton(
+                        color: ColorUtils.primary,
+                        onPressed: () => navigateTo(MyApp.ROUTE_LOGIN_EMAIL),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.email, color: Colors.white, size: 24),
+                            Expanded(
+                              child: Text("Sign in with email",
+                                textAlign: TextAlign.center,
+                                textScaleFactor: 1.0,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                       FlatButton(
                         color: ColorUtils.redGoogle,
                         onPressed: (){
@@ -91,9 +111,9 @@ class _LoginState extends BaseState<Login> implements LoginDelegate{
                                 textAlign: TextAlign.center,
                                 textScaleFactor: 1.0,
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             )
@@ -113,9 +133,9 @@ class _LoginState extends BaseState<Login> implements LoginDelegate{
                                 textAlign: TextAlign.center,
                                 textScaleFactor: 1.0,
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             )

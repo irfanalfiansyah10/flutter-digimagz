@@ -8,10 +8,14 @@ class AppPreference {
 
   static SharedPreferences _instance;
 
-  static Future<User> getUser() async {
+  static Future<void> _init() async {
     if(_instance == null){
       _instance = await SharedPreferences.getInstance();
     }
+  }
+
+  static Future<User> getUser() async {
+    await _init();
 
     if(_instance.containsKey(PREF_USER)){
       return User.fromJson(jsonDecode(_instance.getString(PREF_USER)));
@@ -21,17 +25,13 @@ class AppPreference {
   }
 
   static Future<bool> saveUser(User user) async {
-    if(_instance == null){
-      _instance = await SharedPreferences.getInstance();
-    }
+    await _init();
 
     return _instance.setString(PREF_USER, user.toJson());
   }
 
   static Future<bool> removeUser() async {
-    if(_instance == null){
-      _instance = await SharedPreferences.getInstance();
-    }
+    await _init();
 
     return _instance.remove(PREF_USER);
   }

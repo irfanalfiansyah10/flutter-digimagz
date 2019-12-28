@@ -238,24 +238,25 @@ class _HomeFragmentState extends BaseState<HomeFragment>
             Container(
               width: double.infinity,
               padding: EdgeInsets.only(left: 10),
-              height: adaptiveWidth(context, 150),
+              height: adaptiveWidth(context, 200),
               child: RequestWrapperWidget(
-                  requestWrapper: _storyWrapper,
-                  placeholder: ListView.builder(
+                requestWrapper: _storyWrapper,
+                placeholder: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  shrinkWrap: true,
+                  itemBuilder: (ctx, position) => ShimmerStoryItem(),
+                ),
+                builder: (ctx, response){
+                  var data = response as StoryResponse;
+                  return ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 5,
+                    itemCount: data.data.length,
                     shrinkWrap: true,
-                    itemBuilder: (ctx, position) => ShimmerStoryItem(),
-                  ),
-                  builder: (ctx, response){
-                    var data = response as StoryResponse;
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: data.data.length,
-                      shrinkWrap: true,
-                      itemBuilder: (ctx, position) => StoryItem(data.data[position], onStorySelected),
-                    );
-                  }),
+                    itemBuilder: (ctx, position) => StoryItem(data.data[position], onStorySelected),
+                  );
+                },
+              ),
             ),
             Container(
               margin: EdgeInsets.all(15),

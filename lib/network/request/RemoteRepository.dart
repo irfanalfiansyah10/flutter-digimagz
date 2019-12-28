@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:digimagz/ancestor/BaseRepository.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/network/response/CommentResponse.dart';
+import 'package:digimagz/network/response/EmagzResponse.dart';
 import 'package:digimagz/network/response/LikeResponse.dart';
 import 'package:digimagz/network/response/NewsCoverStoryResponse.dart';
 import 'package:digimagz/network/response/NewsResponse.dart';
@@ -106,7 +107,7 @@ class Repository extends BaseRepository {
   }
 
   Future<UserResponse> getUser(int typeRequest, Map<String, dynamic> params) async {
-    var response = await get("user/index_get", null, typeRequest);
+    var response = await get("user/index_get", params, typeRequest);
 
     if(response != null){
       return UserResponse.fromJson(jsonDecode(response.data));
@@ -130,6 +131,16 @@ class Repository extends BaseRepository {
 
     if(response != null){
       return YoutubeResponse.fromJson(jsonDecode(response.data));
+    }
+
+    return null;
+  }
+
+  Future<EmagzResponse> getEmagz(int typeRequest) async {
+    var response = await get("emagz/index_get", null, typeRequest);
+
+    if(response != null){
+      return EmagzResponse.fromJson(jsonDecode(response.data));
     }
 
     return null;

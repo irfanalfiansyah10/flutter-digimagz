@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:digimagz/custom/view/text/StyledText.dart';
 import 'package:digimagz/extension/Size.dart';
-import 'package:digimagz/network/response/NewsCoverStoryResponse.dart';
 import 'package:digimagz/network/response/StoryResponse.dart';
 import 'package:digimagz/utilities/UrlUtils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -15,33 +16,47 @@ class StoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        onCoverSelected(story);
-      },
-      child: Container(
-        margin: EdgeInsets.all(5),
-        child: CachedNetworkImage(
-          imageUrl: UrlUtils.URL_IMAGE_STORY + story.imageCoverStory,
-          imageBuilder: (ctx, provider) => Container(
-            width: adaptiveWidth(context, 150),
-            height: adaptiveWidth(context, 150),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: provider,
-                fit: BoxFit.cover,
+      onTap: () => onCoverSelected(story),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 5),
+            child: CachedNetworkImage(
+              imageUrl: UrlUtils.URL_IMAGE_STORY + story.imageCoverStory,
+              imageBuilder: (ctx, provider) => Container(
+                width: adaptiveWidth(context, 150),
+                height: adaptiveWidth(context, 150),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: provider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              placeholder: (ctx, url) => Shimmer.fromColors(
+                child: Container(
+                  width: adaptiveWidth(context, 150),
+                  height: adaptiveWidth(context, 150),
+                  color: Colors.grey[300],
+                ),
+                baseColor: Colors.grey[300],
+                highlightColor: Colors.white,
               ),
             ),
           ),
-          placeholder: (ctx, url) => Shimmer.fromColors(
-              child: Container(
-                width: adaptiveWidth(context, 150),
-                height: adaptiveWidth(context, 150),
-                color: Colors.grey[300],
-              ),
-              baseColor: Colors.grey[300],
-              highlightColor: Colors.white
-          ),
-        ),
+          Container(
+            height: adaptiveWidth(context, 50),
+            width: adaptiveWidth(context, 150),
+            color: Colors.grey,
+            alignment: Alignment.center,
+            child: StyledText(story.titleCoverStory,
+              size: adaptiveWidth(context, 14),
+              color: Colors.white,
+              textAlign: TextAlign.center,
+            ),
+          )
+        ],
       ),
     );
   }

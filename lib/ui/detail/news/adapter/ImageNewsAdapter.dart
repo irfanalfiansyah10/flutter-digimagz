@@ -13,32 +13,30 @@ class ImageNewsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        CachedNetworkImage(
-          imageUrl: UrlUtils.getUrlForImage(news, position),
-          imageBuilder: (ctx, provider) => Container(
-            width: double.infinity,
-            height: adaptiveWidth(context, 230),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: provider,
-                fit: BoxFit.cover,
-              ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 15),
+      child: CachedNetworkImage(
+        imageUrl: UrlUtils.getUrlForImage(news, position),
+        imageBuilder: (ctx, provider) => Container(
+          width: double.infinity,
+          height: adaptiveWidth(context, 230),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: provider,
+              fit: BoxFit.cover,
             ),
-          ),
-          placeholder: (ctx, url) => Shimmer.fromColors(
-            child: Container(
-              width: double.infinity,
-              height: adaptiveWidth(context, 200),
-              color: Colors.grey[300],
-            ),
-            baseColor: Colors.grey[300],
-            highlightColor: Colors.white,
           ),
         ),
-        SizedBox(height: 10)
-      ],
+        placeholder: (ctx, url) => Shimmer.fromColors(
+          child: Container(
+            width: double.infinity,
+            height: adaptiveWidth(context, 230),
+            color: Colors.grey[300],
+          ),
+          baseColor: Colors.grey[300],
+          highlightColor: Colors.white,
+        ),
+      ),
     );
   }
 }
