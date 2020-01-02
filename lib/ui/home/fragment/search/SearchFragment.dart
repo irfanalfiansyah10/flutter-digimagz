@@ -25,9 +25,8 @@ class SearchFragment extends StatefulWidget {
 
 }
 
-class _SearchFragmentState extends BaseState<SearchFragment>
+class _SearchFragmentState extends BaseState<SearchFragment, SearchFragmentPresenter>
     implements SearchFragmentDelegate{
-  SearchFragmentPresenter _presenter;
   RequestWrapper<NewsResponse> _wrapper = RequestWrapper();
 
   TextEditingController _searchController = TextEditingController();
@@ -35,10 +34,11 @@ class _SearchFragmentState extends BaseState<SearchFragment>
   bool isFirstVisit = true;
 
   @override
+  SearchFragmentPresenter initPresenter() => SearchFragmentPresenter(this);
+
+  @override
   void initState() {
     super.initState();
-    _presenter = SearchFragmentPresenter(this);
-
     _wrapper.subscribeOnFinishedAndNonNull((r) => Provider.of<LikeProvider>(context).collect(r));
   }
 
@@ -49,10 +49,10 @@ class _SearchFragmentState extends BaseState<SearchFragment>
   void shouldShowLoading(int typeRequest) {}
 
   @override
-  void onRequestTimeOut(int typeRequest) => delay(5000, () => _presenter.executeGetNews(_wrapper));
+  void onRequestTimeOut(int typeRequest) => delay(5000, () => presenter.executeGetNews(_wrapper));
 
   @override
-  void onNoConnection(int typeRequest) => delay(5000, () => _presenter.executeGetNews(_wrapper));
+  void onNoConnection(int typeRequest) => delay(5000, () => presenter.executeGetNews(_wrapper));
 
   @override
   void onNewsSelected(News news) {
@@ -122,7 +122,8 @@ class _SearchFragmentState extends BaseState<SearchFragment>
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
-                _presenter.executeGetNews(_wrapper);
+                presenter.executeGetNews(_wrapper);
+                await Future.delayed(Duration(seconds: 2));
               },
               color: Colors.black,
               backgroundColor: Colors.white,
@@ -170,7 +171,7 @@ class _SearchFragmentState extends BaseState<SearchFragment>
 
   void visit(){
     if(isFirstVisit) {
-      _presenter.executeGetNews(_wrapper);
+      presenter.executeGetNews(_wrapper);
       isFirstVisit = false;
     }
   }

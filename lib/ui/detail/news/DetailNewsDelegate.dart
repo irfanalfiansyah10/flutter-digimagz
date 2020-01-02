@@ -1,5 +1,6 @@
 class DetailNewsDelegate {
-  void onSuccessLike(){}
-  void onSuccessDislike(){}
   void onSuccessPostComment(){}
+  void onSuccessLike(){}
+  void onSuccessUnlike(){}
+  void onAlreadyLiked(){}
 }

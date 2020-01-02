@@ -4,6 +4,8 @@ import 'package:digimagz/network/response/BaseResponse.dart';
 class CommentResponse extends BaseResponse{
   List<Comment> data;
 
+  CommentResponse() : super();
+
   CommentResponse.fromJson(Map<String, dynamic> json) : super.fromJson(json){
     data = List();
     if(json["data"] != null){
@@ -20,6 +22,8 @@ class Comment {
   String dateComment;
   String userName;
   String profilepicUrl;
+
+  Comment();
 
   Comment.fromJson(Map<String, dynamic> json){
     idNews = obtainValue(json["ID_NEWS"], "");

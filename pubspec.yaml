@@ -30,10 +30,8 @@ dependencies:
   google_sign_in:
   shared_preferences:
   shimmer:
-  cached_network_image: ^2.0.0-rc
+  cached_network_image: 2.0.0
   intl:
-  flutter_launcher_icons:
-  sqflite:
   flutter_svg:
   url_launcher:
   flutter_youtube:
@@ -42,12 +40,16 @@ dependencies:
   firebase_messaging:
   flutter_facebook_login:
   flutter_widget_from_html:
-  mcnmr_request_wrapper:
+  mcnmr_request_wrapper: 0.0.4
   mcnmr_common_ext:
   mcnmr_wrap_height_gridview:
   pull_to_refresh:
   provider: 4.0.0
-  carousel_slider:
+  flutter_downloader:
+  image_picker:
+  share:
+  path_provider:
+  open_file:
 
 dev_dependencies:
   flutter_test:

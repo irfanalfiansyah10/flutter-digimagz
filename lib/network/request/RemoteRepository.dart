@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:digimagz/ancestor/BaseRepository.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
+import 'package:digimagz/network/response/BaseResponse.dart';
 import 'package:digimagz/network/response/CommentResponse.dart';
 import 'package:digimagz/network/response/EmagzResponse.dart';
-import 'package:digimagz/network/response/LikeResponse.dart';
 import 'package:digimagz/network/response/NewsCoverStoryResponse.dart';
 import 'package:digimagz/network/response/NewsResponse.dart';
 import 'package:digimagz/network/response/StoryResponse.dart';
@@ -116,11 +116,11 @@ class Repository extends BaseRepository {
     return null;
   }
 
-  Future<String> getLikes(int typeRequest, Map<String, dynamic> params) async {
-    var response = await get("likes/index_get", params, typeRequest);
+  Future<BaseResponse> getLikes(int typeRequest, Map<String, dynamic> params) async {
+    var response = await get("likes/index_get", params, typeRequest, throwOnResponseError: false);
 
     if(response != null){
-      return response.data;
+      return BaseResponse.fromJson(jsonDecode(response.data));
     }
 
     return null;
@@ -156,11 +156,11 @@ class Repository extends BaseRepository {
     return null;
   }
 
-  Future<Like> postLike(int typeRequest, Map<String, dynamic> params) async {
-    var response = await post("likes/index_post", params, typeRequest);
+  Future<BaseResponse> postLike(int typeRequest, Map<String, dynamic> params) async {
+    var response = await post("likes/index_post", params, typeRequest, throwOnResponseError: false);
 
     if(response != null){
-      return Like.fromJson(jsonDecode(response.data));
+      return BaseResponse.fromJson(jsonDecode(response.data));
     }
 
     return null;
@@ -176,23 +176,34 @@ class Repository extends BaseRepository {
     return null;
   }
 
-  Future<Like> deleteLike(int typeRequest, Map<String, dynamic> params) async {
+  Future<BaseResponse> deleteLike(int typeRequest, Map<String, dynamic> params) async {
     var response = await delete("likes/index_delete", params, typeRequest,
+        throwOnResponseError: false,
         contentType: "application/x-www-form-urlencoded");
 
     if(response != null){
-      return Like.fromJson(jsonDecode(response.data));
+      return BaseResponse.fromJson(jsonDecode(response.data));
     }
 
     return null;
   }
 
-  Future<UserResponse> putUsername(int typeRequest, Map<String, dynamic> params) async {
+  Future<UserResponse> putUser(int typeRequest, Map<String, dynamic> params) async {
     var response = await put("user/index_put", params, typeRequest,
         contentType: "application/x-www-form-urlencoded");
 
     if(response != null){
       return UserResponse.fromJson(jsonDecode(response.data));
+    }
+
+    return null;
+  }
+
+  Future<BaseResponse> changeAvatar(int typeRequest, Map<String, dynamic> params) async {
+    var response = await formData("user/avatar", params, typeRequest);
+
+    if(response != null){
+      return BaseResponse.fromJson(jsonDecode(response.data));
     }
 
     return null;

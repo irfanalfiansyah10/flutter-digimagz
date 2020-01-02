@@ -7,25 +7,19 @@ import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends BaseState<Login> implements LoginDelegate{
-  LoginPresenter _presenter;
+class _LoginState extends BaseState<Login, LoginPresenter> implements LoginDelegate{
 
   @override
-  void initState() {
-    super.initState();
-    _presenter = LoginPresenter(this, this);
-  }
+  LoginPresenter initPresenter() => LoginPresenter(this, this);
 
   @override
   void onSuccessLogin() {
-    Fluttertoast.showToast(msg: "Success Login");
     navigateTo(MyApp.ROUTE_HOME, singleTop: true);
   }
 
@@ -43,7 +37,7 @@ class _LoginState extends BaseState<Login> implements LoginDelegate{
         title: Image.asset("assets/images/logo_toolbar.png"),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back_ios),
           color: Colors.black,
           onPressed: (){
             finish();
@@ -101,7 +95,7 @@ class _LoginState extends BaseState<Login> implements LoginDelegate{
                       FlatButton(
                         color: ColorUtils.redGoogle,
                         onPressed: (){
-                          _presenter.executeSignInGoogle();
+                          presenter.executeSignInGoogle();
                         },
                         child: Row(
                           children: <Widget>[
@@ -123,7 +117,7 @@ class _LoginState extends BaseState<Login> implements LoginDelegate{
                       FlatButton(
                         color: ColorUtils.blueFacebook,
                         onPressed: (){
-                          _presenter.executeSignInFacebook();
+                          presenter.executeSignInFacebook();
                         },
                         child: Row(
                           children: <Widget>[

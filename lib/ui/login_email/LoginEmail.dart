@@ -6,16 +6,13 @@ import 'package:digimagz/ui/login_email/LoginEmailDelegate.dart';
 import 'package:digimagz/ui/login_email/LoginEmailPresenter.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginEmail extends StatefulWidget {
   @override
   _LoginEmailState createState() => _LoginEmailState();
 }
 
-class _LoginEmailState extends BaseState<LoginEmail> implements LoginEmailDelegate{
-  LoginEmailPresenter _presenter;
-
+class _LoginEmailState extends BaseState<LoginEmail, LoginEmailPresenter> implements LoginEmailDelegate{
   String _email = "";
   String _name = "";
   String _password = "";
@@ -24,10 +21,7 @@ class _LoginEmailState extends BaseState<LoginEmail> implements LoginEmailDelega
   bool _isAlreadyRegistered = false;
 
   @override
-  void initState() {
-    super.initState();
-    _presenter = LoginEmailPresenter(this, this);
-  }
+  LoginEmailPresenter initPresenter() => LoginEmailPresenter(this, this);
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +61,9 @@ class _LoginEmailState extends BaseState<LoginEmail> implements LoginEmailDelega
               alignment: Alignment.centerRight,
               child: MaterialButton(
                 onPressed: _nextStep && !_isAlreadyRegistered ?
-                    () => _presenter.createUser(_email, _password, _name) : _nextStep ?
-                    () => _presenter.login(_email, _password) :
-                    () => _presenter.checkEmailAvailability(_email),
+                    () => presenter.createUser(_email, _password, _name) : _nextStep ?
+                    () => presenter.login(_email, _password) :
+                    () => presenter.checkEmailAvailability(_email),
                 color: ColorUtils.primary,
                 height: adaptiveWidth(context, 40),
                 child: StyledText(_nextStep && _isAlreadyRegistered ? "LOGIN" : _nextStep ? "SIMPAN" : "BERIKUTNYA",
@@ -103,7 +97,6 @@ class _LoginEmailState extends BaseState<LoginEmail> implements LoginEmailDelega
 
   @override
   void onSuccessLoginOrCreateUser() {
-    Fluttertoast.showToast(msg: "Success Login");
     navigateTo(MyApp.ROUTE_HOME, singleTop: true);
   }
 

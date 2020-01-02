@@ -22,18 +22,14 @@ class VideoFragment extends StatefulWidget {
   }
 }
 
-class _VideoFragmentState extends BaseState<VideoFragment>
+class _VideoFragmentState extends BaseState<VideoFragment, VideoFragmentPresenter>
     implements VideoFragmentDelegate{
-  VideoFragmentPresenter _presenter;
   RequestWrapper<YoutubeResponse> _youtubeWrapper = RequestWrapper();
 
   bool isFirstVisit = true;
 
   @override
-  void initState() {
-    super.initState();
-    _presenter = VideoFragmentPresenter(this);
-  }
+  VideoFragmentPresenter initPresenter() => VideoFragmentPresenter(this);
 
   @override
   void shouldHideLoading(int typeRequest) {}
@@ -42,10 +38,10 @@ class _VideoFragmentState extends BaseState<VideoFragment>
   void shouldShowLoading(int typeRequest) {}
 
   @override
-  void onNoConnection(int typeRequest) => delay(5000, () => _presenter.executeGetVideo(_youtubeWrapper));
+  void onNoConnection(int typeRequest) => delay(5000, () => presenter.executeGetVideo(_youtubeWrapper));
 
   @override
-  void onRequestTimeOut(int typeRequest) => delay(5000, () => _presenter.executeGetVideo(_youtubeWrapper));
+  void onRequestTimeOut(int typeRequest) => delay(5000, () => presenter.executeGetVideo(_youtubeWrapper));
 
   @override
   void onPlayVideo(YoutubeVideo video) {
@@ -76,7 +72,8 @@ class _VideoFragmentState extends BaseState<VideoFragment>
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        _presenter.executeGetVideo(_youtubeWrapper);
+        presenter.executeGetVideo(_youtubeWrapper);
+        await Future.delayed(Duration(seconds: 2));
       },
       color: Colors.black,
       backgroundColor: Colors.white,
@@ -101,8 +98,7 @@ class _VideoFragmentState extends BaseState<VideoFragment>
 
   void visit(){
     if(isFirstVisit) {
-      _presenter.executeGetVideo(_youtubeWrapper);
-
+      presenter.executeGetVideo(_youtubeWrapper);
       isFirstVisit = false;
     }
   }

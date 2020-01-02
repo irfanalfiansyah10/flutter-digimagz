@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:digimagz/ancestor/BasePresenter.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/network/response/UserResponse.dart';
 import 'package:digimagz/preferences/AppPreference.dart';
-import 'package:mcnmr_common_ext/NonNullChecker.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 
 class NewsAdapterPresenter extends BasePresenter{
@@ -27,11 +24,7 @@ class NewsAdapterPresenter extends BasePresenter{
 
     var result = await repository.getLikes(REQUEST_CHECK_LIKE, params);
     if(result != null){
-      var json = jsonDecode(result);
-
-      var isLiked = obtainValue(json["data"], "") == "Yes";
-
-      wrapper.finishRequest(isLiked);
+      wrapper.finishRequest(result.status);
     }
   }
 }

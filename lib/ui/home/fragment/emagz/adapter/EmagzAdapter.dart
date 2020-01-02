@@ -9,8 +9,9 @@ import 'package:digimagz/extension/Size.dart';
 
 class EmagzItem extends StatelessWidget {
   final EmagzData data;
+  final Function(EmagzData data) onSelected;
 
-  EmagzItem({@required this.data});
+  EmagzItem({@required this.data, @required this.onSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,7 @@ class EmagzItem extends StatelessWidget {
             ),
             SizedBox(height: adaptiveWidth(context, 10)),
             MaterialButton(
-              onPressed: (){},
+              onPressed: () => onSelected(data),
               color: ColorUtils.primary,
               child: Row(
                 mainAxisSize: MainAxisSize.min,

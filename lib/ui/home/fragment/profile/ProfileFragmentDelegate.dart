@@ -1,6 +1,7 @@
-import 'package:digimagz/network/response/UserResponse.dart';
+import 'package:digimagz/network/response/BaseResponse.dart';
 
 class ProfileFragmentDelegate {
-  void onEditSuccess(User newUser){}
+  void onSuccessChangeAvatar(BaseResponse response){}
+
   void onSuccessLogout(){}
 }

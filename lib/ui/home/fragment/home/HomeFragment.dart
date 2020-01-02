@@ -28,9 +28,8 @@ class HomeFragment extends StatefulWidget {
   _HomeFragmentState createState() => state;
 }
 
-class _HomeFragmentState extends BaseState<HomeFragment>
+class _HomeFragmentState extends BaseState<HomeFragment, HomeFragmentPresenter>
     implements HomeFragmentDelegate{
-  HomeFragmentPresenter _presenter;
   RequestWrapper<NewsResponse> _trendingWrapper = RequestWrapper();
   RequestWrapper<NewsResponse> _sliderWrapper = RequestWrapper();
   RequestWrapper<NewsResponse> _newsWrapper = RequestWrapper();
@@ -39,38 +38,37 @@ class _HomeFragmentState extends BaseState<HomeFragment>
   int _sliderPosition = 0;
 
   @override
-  void shouldHideLoading(int typeRequest) {
-
-  }
+  HomeFragmentPresenter initPresenter() => HomeFragmentPresenter(this);
 
   @override
-  void shouldShowLoading(int typeRequest) {
+  void shouldHideLoading(int typeRequest) {}
 
-  }
+  @override
+  void shouldShowLoading(int typeRequest) {}
 
   @override
   void onNoConnection(int typeRequest) {
     if(typeRequest == HomeFragmentPresenter.REQUEST_GET_SLIDER){
-      delay(5000, () => _presenter.executeGetSlider(_sliderWrapper));
+      delay(5000, () => presenter.executeGetSlider(_sliderWrapper));
     }else if(typeRequest == HomeFragmentPresenter.REQUEST_GET_NEWS){
-      delay(5000, () => _presenter.executeGetNews(_newsWrapper));
+      delay(5000, () => presenter.executeGetNews(_newsWrapper));
     }else if(typeRequest == HomeFragmentPresenter.REQUEST_GET_NEWS_TREND){
-      delay(5000, () => _presenter.executeGetNewsTrending(_trendingWrapper));
+      delay(5000, () => presenter.executeGetNewsTrending(_trendingWrapper));
     }else if(typeRequest == HomeFragmentPresenter.REQUEST_GET_STORY){
-      delay(5000, () => _presenter.executeGetStory(_storyWrapper));
+      delay(5000, () => presenter.executeGetStory(_storyWrapper));
     }
   }
 
   @override
   void onRequestTimeOut(int typeRequest) {
     if(typeRequest == HomeFragmentPresenter.REQUEST_GET_SLIDER){
-      delay(5000, () => _presenter.executeGetSlider(_sliderWrapper));
+      delay(5000, () => presenter.executeGetSlider(_sliderWrapper));
     }else if(typeRequest == HomeFragmentPresenter.REQUEST_GET_NEWS){
-      delay(5000, () => _presenter.executeGetNews(_newsWrapper));
+      delay(5000, () => presenter.executeGetNews(_newsWrapper));
     }else if(typeRequest == HomeFragmentPresenter.REQUEST_GET_NEWS_TREND){
-      delay(5000, () => _presenter.executeGetNewsTrending(_trendingWrapper));
+      delay(5000, () => presenter.executeGetNewsTrending(_trendingWrapper));
     }else if(typeRequest == HomeFragmentPresenter.REQUEST_GET_STORY){
-      delay(5000, () => _presenter.executeGetStory(_storyWrapper));
+      delay(5000, () => presenter.executeGetStory(_storyWrapper));
     }
   }
 
@@ -86,18 +84,18 @@ class _HomeFragmentState extends BaseState<HomeFragment>
 
   @override
   void onNavigationResume(String from) {
-    _presenter.executeGetNewsTrending(_trendingWrapper);
-    _presenter.executeGetNews(_newsWrapper);
+    presenter.executeGetNewsTrending(_trendingWrapper);
+    presenter.executeGetNews(_newsWrapper);
   }
 
   @override
   void initState() {
     super.initState();
-    _presenter = HomeFragmentPresenter(this);
-    _presenter.executeGetNewsTrending(_trendingWrapper);
-    _presenter.executeGetStory(_storyWrapper);
-    _presenter.executeGetNews(_newsWrapper);
-    _presenter.executeGetSlider(_sliderWrapper);
+    presenter = HomeFragmentPresenter(this);
+    presenter.executeGetNewsTrending(_trendingWrapper);
+    presenter.executeGetStory(_storyWrapper);
+    presenter.executeGetNews(_newsWrapper);
+    presenter.executeGetSlider(_sliderWrapper);
 
     _trendingWrapper.subscribeOnFinishedAndNonNull((r) => Provider.of<LikeProvider>(context).collect(r));
     _newsWrapper.subscribeOnFinishedAndNonNull((r) => Provider.of<LikeProvider>(context).collect(r));
@@ -108,10 +106,12 @@ class _HomeFragmentState extends BaseState<HomeFragment>
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        _presenter.executeGetNewsTrending(_trendingWrapper);
-        _presenter.executeGetStory(_storyWrapper);
-        _presenter.executeGetNews(_newsWrapper);
-        _presenter.executeGetSlider(_sliderWrapper);
+        presenter.executeGetNewsTrending(_trendingWrapper);
+        presenter.executeGetStory(_storyWrapper);
+        presenter.executeGetNews(_newsWrapper);
+        presenter.executeGetSlider(_sliderWrapper);
+
+        await Future.delayed(Duration(seconds: 2));
       },
       color: Colors.black,
       backgroundColor: Colors.white,

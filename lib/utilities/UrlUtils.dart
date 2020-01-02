@@ -1,10 +1,11 @@
 import 'package:digimagz/network/response/NewsResponse.dart';
 
 class UrlUtils{
-  static const String URL_IMAGE_NEWS = "http://digimon.kristomoyo.com/images/news/";
-  static const String URL_IMAGE_STORY = "http://digimon.kristomoyo.com/images/coverstory/";
-  static const String URL_IMAGE_GALLERY = "http://digimon.kristomoyo.com/images/gallery/";
-  static const String URL_IMAGE_EMAGZ = "http://digimon.kristomoyo.com/emagazine/thumbnail/";
+  static const String URL_IMAGE_NEWS = URL+"images/news/";
+  static const String URL_IMAGE_STORY = URL+"images/coverstory/";
+  static const String URL_IMAGE_GALLERY = URL+"images/gallery/";
+  static const String URL_IMAGE_EMAGZ = URL+"emagazine/thumbnail/";
+  static const String URL_FILES_EMAGZ = URL+"emagazine/files/";
   static const String URL = "http://digimon.kristomoyo.com/";
 
   static String getUrlForImage(News news, int position){

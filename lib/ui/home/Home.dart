@@ -1,7 +1,9 @@
+import 'dart:ui';
+
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/main.dart';
-import 'package:digimagz/network/response/UserResponse.dart';
 import 'package:digimagz/preferences/AppPreference.dart';
+import 'package:digimagz/ui/home/HomePresenter.dart';
 import 'package:digimagz/ui/home/fragment/emagz/EmagzFragment.dart';
 import 'package:digimagz/ui/home/fragment/home/HomeFragment.dart';
 import 'package:digimagz/ui/home/fragment/profile/ProfileFragment.dart';
@@ -15,7 +17,7 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends BaseState<Home> {
+class _HomeState extends BaseState<Home, HomePresenter> {
 
   var _content = [
     HomeFragment(),
@@ -25,13 +27,26 @@ class _HomeState extends BaseState<Home> {
     ProfileFragment(),
   ];
 
-  User _user;
-
   int _currentPosition = 0;
+  bool _alreadySignIn = false;
+
+  @override
+  HomePresenter initPresenter() => HomePresenter(this);
 
   @override
   void afterWidgetBuilt() async {
-    _user = await AppPreference.getUser();
+    var user = await AppPreference.getUser();
+    if(user != null){
+      setState(() => _alreadySignIn = true);
+    }
+  }
+
+  @override
+  void onNavigationResult(String from, result) {
+    if(from == MyApp.ROUTE_FILL_PERSONAL_DATA && result){
+      (_content[4] as ProfileFragment).reload();
+      setState(() => _currentPosition = 4);
+    }
   }
 
   @override
@@ -43,6 +58,15 @@ class _HomeState extends BaseState<Home> {
         title: Center(
           child: Image.asset("assets/images/logo_toolbar.png"),
         ),
+        actions: <Widget>[
+          Visibility(
+            visible: _currentPosition == 3,
+            child: IconButton(
+              icon: Icon(Icons.folder, color: Colors.black.withOpacity(0.5)),
+              onPressed: () => navigateTo(MyApp.ROUTE_DOWNLOAD_PROGRESS),
+            ),
+          )
+        ],
       ),
       body: SafeArea(
         child: IndexedStack(
@@ -56,7 +80,7 @@ class _HomeState extends BaseState<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.play_circle_outline), title: Text("Video")),
           BottomNavigationBarItem(icon: Icon(Icons.search), title: Text("Search")),
           BottomNavigationBarItem(icon: Icon(Icons.book), title: Text("Emagz")),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), title: Text("Login")),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), title: Text(_alreadySignIn ? "Profile" : "Login")),
         ],
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,
@@ -75,15 +99,22 @@ class _HomeState extends BaseState<Home> {
     }else if(newPosition == 2){
       (_content[newPosition] as SearchFragment).visit();
     }else if(newPosition == 4){
-      if(_user == null){
+      var user = await AppPreference.getUser();
+
+      if(user == null){
         navigateTo(MyApp.ROUTE_LOGIN);
         return;
+      }else {
+        if(user.gender == "-" || user.dateBirth == "-"){
+          navigateTo(MyApp.ROUTE_FILL_PERSONAL_DATA);
+          return;
+        }else {
+          (_content[newPosition] as ProfileFragment).reload();
+        }
       }
     }
 
-    setState(() {
-      _currentPosition = newPosition;
-    });
+    setState(() => _currentPosition = newPosition);
   }
 }
 

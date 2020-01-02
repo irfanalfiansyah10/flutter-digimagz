@@ -28,15 +28,16 @@ class ListNews extends StatefulWidget {
   _ListNewsState createState() => _ListNewsState();
 }
 
-class _ListNewsState extends BaseState<ListNews> implements ListNewsDelegate{
-  ListNewsPresenter _presenter;
+class _ListNewsState extends BaseState<ListNews, ListNewsPresenter> implements ListNewsDelegate{
   RequestWrapper<NewsResponse> _wrapper = RequestWrapper();
+
+  @override
+  ListNewsPresenter initPresenter() => ListNewsPresenter(this);
 
   @override
   void initState() {
     super.initState();
-    _presenter = ListNewsPresenter(this);
-    _presenter.executeGetNews(widget.argument, _wrapper);
+    presenter.executeGetNews(widget.argument, _wrapper);
 
     _wrapper.subscribeOnFinishedAndNonNull((r) => Provider.of<LikeProvider>(context).collect(r));
   }
@@ -48,10 +49,10 @@ class _ListNewsState extends BaseState<ListNews> implements ListNewsDelegate{
   void shouldShowLoading(int typeRequest) {}
 
   @override
-  void onRequestTimeOut(int typeRequest) => delay(5000, () => _presenter.executeGetNews(widget.argument, _wrapper));
+  void onRequestTimeOut(int typeRequest) => delay(5000, () => presenter.executeGetNews(widget.argument, _wrapper));
 
   @override
-  void onNoConnection(int typeRequest) => delay(5000, () => _presenter.executeGetNews(widget.argument, _wrapper));
+  void onNoConnection(int typeRequest) => delay(5000, () => presenter.executeGetNews(widget.argument, _wrapper));
 
   @override
   void onNewsSelected(News news) {
@@ -67,7 +68,7 @@ class _ListNewsState extends BaseState<ListNews> implements ListNewsDelegate{
         title: Image.asset("assets/images/logo_toolbar.png"),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back_ios),
           color: Colors.black,
           onPressed: (){
             finish();
@@ -83,7 +84,10 @@ class _ListNewsState extends BaseState<ListNews> implements ListNewsDelegate{
           itemBuilder: (ctx, position) => ShimmerNewsItem(),
         ),
         builder: (ctx, response) => RefreshIndicator(
-          onRefresh: () async => _presenter.executeGetNews(widget.argument, _wrapper),
+          onRefresh: () async {
+            presenter.executeGetNews(widget.argument, _wrapper);
+            await Future.delayed(Duration(seconds: 2));
+          },
           color: Colors.black,
           backgroundColor: Colors.white,
           child: ListView.builder(

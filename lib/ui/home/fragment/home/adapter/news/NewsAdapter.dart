@@ -25,15 +25,15 @@ class NewsItem extends StatefulWidget {
   _NewsItemState createState() => _NewsItemState();
 }
 
-class _NewsItemState extends BaseState<NewsItem> {
-
-  NewsAdapterPresenter _presenter;
+class _NewsItemState extends BaseState<NewsItem, NewsAdapterPresenter> {
   RequestWrapper<bool> _likeWrapper = RequestWrapper(initialValue: false);
+
+  @override
+  NewsAdapterPresenter initPresenter() => NewsAdapterPresenter(this);
 
   @override
   void initState() {
     super.initState();
-    _presenter = NewsAdapterPresenter(this);
     _likeWrapper.subscribeOnFinishedAndNonNull((r){
       if(r){
         Provider.of<LikeProvider>(context).alreadyLiked(widget.news);
@@ -42,7 +42,7 @@ class _NewsItemState extends BaseState<NewsItem> {
   }
 
   @override
-  void afterWidgetBuilt() => _presenter.executeCheckLike(_likeWrapper, widget.news.idNews);
+  void afterWidgetBuilt() => presenter.executeCheckLike(_likeWrapper, widget.news.idNews);
 
   @override
   void shouldShowLoading(int typeRequest) {}
@@ -52,11 +52,11 @@ class _NewsItemState extends BaseState<NewsItem> {
 
   @override
   void onRequestTimeOut(int typeRequest) => delay(5000,
-          () => _presenter.executeCheckLike(_likeWrapper, widget.news.idNews));
+          () => presenter.executeCheckLike(_likeWrapper, widget.news.idNews));
 
   @override
   void onNoConnection(int typeRequest) => delay(5000,
-          () => _presenter.executeCheckLike(_likeWrapper, widget.news.idNews));
+          () => presenter.executeCheckLike(_likeWrapper, widget.news.idNews));
 
 
   @override

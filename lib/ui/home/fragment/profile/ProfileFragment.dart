@@ -1,18 +1,20 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
+import 'package:digimagz/network/response/BaseResponse.dart';
 import 'package:digimagz/provider/LikeProvider.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapperWidget.dart';
 import 'package:digimagz/extension/Size.dart';
 import 'package:digimagz/main.dart';
 import 'package:digimagz/network/response/UserResponse.dart';
-import 'package:digimagz/preferences/AppPreference.dart';
 import 'package:digimagz/ui/home/fragment/profile/ProfileFragmentDelegate.dart';
 import 'package:digimagz/ui/home/fragment/profile/ProfileFragmentPresenter.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -23,27 +25,44 @@ class ProfileFragment extends StatefulWidget {
   @override
   _ProfileFragmentState createState() => state;
 
+  void reload(){
+    state.reload();
+  }
 }
 
-class _ProfileFragmentState extends BaseState<ProfileFragment> implements ProfileFragmentDelegate{
-  ProfileFragmentPresenter _presenter;
+class _ProfileFragmentState extends BaseState<ProfileFragment, ProfileFragmentPresenter>
+    implements ProfileFragmentDelegate{
+  static const CANCEL = -1;
+  static const OPEN_CAMERA = 0;
+  static const OPEN_GALLERY = 1;
+
   RequestWrapper<User> _userWrapper = RequestWrapper();
 
   @override
-  void initState() {
-    super.initState();
-    _presenter = ProfileFragmentPresenter(this, this);
-  }
+  ProfileFragmentPresenter initPresenter() => ProfileFragmentPresenter(this, this);
 
   @override
   void afterWidgetBuilt() {
-    _presenter.getAccount(_userWrapper);
+    presenter.getAccount(_userWrapper);
   }
 
   @override
-  void onEditSuccess(User newUser) async {
-    Fluttertoast.showToast(msg: "Nama Profil berhasil diperbarui");
-    await AppPreference.saveUser(newUser);
+  void shouldHideLoading(int typeRequest) {
+    if(typeRequest == ProfileFragmentPresenter.CHANGE_AVATAR){
+      super.shouldHideLoading(typeRequest);
+    }
+  }
+
+  @override
+  void shouldShowLoading(int typeRequest) {
+    if(typeRequest == ProfileFragmentPresenter.CHANGE_AVATAR){
+      super.shouldShowLoading(typeRequest);
+    }
+  }
+
+  @override
+  void onSuccessChangeAvatar(BaseResponse response) {
+    reload();
   }
 
   @override
@@ -118,15 +137,51 @@ class _ProfileFragmentState extends BaseState<ProfileFragment> implements Profil
                 Positioned(
                   bottom: adaptiveWidth(context, -12.5),
                   right: adaptiveWidth(context, -2.5),
-                  child: Container(
-                    width: adaptiveWidth(context, 50),
-                    height: adaptiveWidth(context, 50),
-                    decoration: BoxDecoration(
+                  child: InkWell(
+                    onTap: () async {
+                      var result = await showCupertinoModalPopup(
+                        context: context,
+                        builder: (_) => CupertinoActionSheet(
+                          title: Text("Change Image Profile"),
+                          message: Text("Choose options below"),
+                          actions: <Widget>[
+                            CupertinoActionSheetAction(
+                              onPressed: () => finish(result: OPEN_GALLERY),
+                              child: Text("From Gallery"),
+                            ),
+                            CupertinoActionSheetAction(
+                              onPressed: () => finish(result: OPEN_CAMERA),
+                              child: Text("From Camera"),
+                            ),
+                          ],
+                          cancelButton: CupertinoActionSheetAction(
+                            onPressed: () => finish(result: CANCEL),
+                            child: Text("Cancel"),
+                          ),
+                        ),
+                      );
+
+                      File image;
+                      if(result == OPEN_GALLERY){
+                        image = await ImagePicker.pickImage(source: ImageSource.gallery);
+                      }else if(result == OPEN_CAMERA){
+                        image = await ImagePicker.pickImage(source: ImageSource.camera);
+                      }
+
+                      if(image != null){
+                        presenter.executeChangeAvatar(image);
+                      }
+                    },
+                    child: Container(
+                      width: adaptiveWidth(context, 50),
+                      height: adaptiveWidth(context, 50),
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: ColorUtils.primary
-                    ),
-                    child: Center(
-                      child: Icon(Icons.camera_alt, color: Colors.white),
+                        color: ColorUtils.primary,
+                      ),
+                      child: Center(
+                        child: Icon(Icons.camera_alt, color: Colors.white),
+                      ),
                     ),
                   ),
                 )
@@ -310,7 +365,7 @@ class _ProfileFragmentState extends BaseState<ProfileFragment> implements Profil
           child: MaterialButton(
             color: ColorUtils.primary,
             onPressed: (){
-              _presenter.logout();
+              presenter.logout();
               Provider.of<LikeProvider>(context).clear();
             },
             minWidth: double.infinity,
@@ -322,5 +377,9 @@ class _ProfileFragmentState extends BaseState<ProfileFragment> implements Profil
         )
       ],
     );
+  }
+
+  void reload(){
+    presenter.getAccountFromAPI(_userWrapper);
   }
 }

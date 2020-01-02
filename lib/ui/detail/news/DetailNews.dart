@@ -4,7 +4,6 @@ import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/custom/view/pageIndicator/PageIndicator.dart';
 import 'package:digimagz/extension/Size.dart';
 import 'package:digimagz/main.dart';
-import 'package:digimagz/network/response/BaseResponse.dart';
 import 'package:digimagz/network/response/CommentResponse.dart';
 import 'package:digimagz/network/response/NewsResponse.dart';
 import 'package:digimagz/network/response/UserResponse.dart';
@@ -18,13 +17,12 @@ import 'package:digimagz/ui/home/fragment/home/adapter/news/NewsAdapter.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:mcnmr_common_ext/FutureDelayed.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapperWidget.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:share/share.dart';
 
 class DetailNews extends StatefulWidget {
   final News news;
@@ -35,11 +33,9 @@ class DetailNews extends StatefulWidget {
   _DetailNewsState createState() => _DetailNewsState();
 }
 
-class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelegate{
-  DetailNewsPresenter _presenter;
+class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implements DetailNewsDelegate{
   RequestWrapper<NewsResponse> _relatedNewsWrapper = RequestWrapper();
   RequestWrapper<CommentResponse> _commentWrapper = RequestWrapper();
-  RequestWrapper<bool> _isLikedWrapper = RequestWrapper<bool>(initialValue: false);
 
   User user;
   bool isUserLoggedIn = false;
@@ -51,22 +47,12 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
   Timer _automaticSlider;
 
   @override
-  void initState() {
-    super.initState();
-    _presenter = DetailNewsPresenter(this, this);
-
-    _isLikedWrapper.subscribeOnFinishedAndNonNull((r){
-      if(r){
-        Provider.of<LikeProvider>(context).addLike(widget.news);
-      }else {
-        Provider.of<LikeProvider>(context).removeLike(widget.news);
-      }
-    });
-  }
+  DetailNewsPresenter initPresenter() => DetailNewsPresenter(this, this);
 
   @override
   void afterWidgetBuilt() async {
-    _presenter.executeGetRelatedNews(widget.news.idNews, _relatedNewsWrapper);
+    presenter.executeGetRelatedNews(widget.news.idNews, _relatedNewsWrapper);
+    presenter.executeGetComment(widget.news.idNews, _commentWrapper);
 
     _automaticSlider = Timer.periodic(Duration(seconds: 5), (_){
       if(_currentSliderPosition == widget.news.newsImage.length - 1){
@@ -84,24 +70,24 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
 
     user = await AppPreference.getUser();
 
-    if(user == null){
-      _isLikedWrapper.finishRequest(false);
-    }else {
-      _presenter.executeCheckLike(widget.news.idNews, _isLikedWrapper);
+    if(user != null){
+      presenter.executeCheckLike(widget.news.idNews);
       setState(() => isUserLoggedIn = true);
     }
   }
 
   @override
   void shouldShowLoading(int typeRequest) {
-    if(typeRequest == DetailNewsPresenter.REQUEST_POST_COMMENT){
+    if(typeRequest == DetailNewsPresenter.REQUEST_POST_COMMENT ||
+        typeRequest == DetailNewsPresenter.REQUEST_LIKE){
       super.shouldShowLoading(typeRequest);
     }
   }
 
   @override
   void shouldHideLoading(int typeRequest) {
-    if(typeRequest == DetailNewsPresenter.REQUEST_POST_COMMENT){
+    if(typeRequest == DetailNewsPresenter.REQUEST_POST_COMMENT ||
+        typeRequest == DetailNewsPresenter.REQUEST_LIKE){
       super.shouldHideLoading(typeRequest);
     }
   }
@@ -109,17 +95,9 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
   @override
   void onNoConnection(int typeRequest) {
     if(typeRequest == DetailNewsPresenter.REQUEST_GET_RELATED_NEWS){
-      delay(5000, () => _presenter.executeGetRelatedNews(widget.news.idNews, _relatedNewsWrapper));
+      delay(5000, () => presenter.executeGetRelatedNews(widget.news.idNews, _relatedNewsWrapper));
     }else if(typeRequest == DetailNewsPresenter.REQUEST_GET_COMMENT){
-      delay(5000, () => _presenter.executeGetComment(widget.news.idNews, _commentWrapper));
-    }else if(typeRequest == DetailNewsPresenter.REQUEST_LIKE){
-      delay(5000, (){
-        if(_isLikedWrapper.result){
-          _presenter.executeUnlike(widget.news.idNews, _isLikedWrapper);
-          return;
-        }
-        _presenter.executeLike(widget.news.idNews, _isLikedWrapper);
-      });
+      delay(5000, () => presenter.executeGetComment(widget.news.idNews, _commentWrapper));
     }else {
       super.onNoConnection(typeRequest);
     }
@@ -128,27 +106,11 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
   @override
   void onRequestTimeOut(int typeRequest) {
     if(typeRequest == DetailNewsPresenter.REQUEST_GET_RELATED_NEWS){
-      delay(5000, () => _presenter.executeGetRelatedNews(widget.news.idNews, _relatedNewsWrapper));
+      delay(5000, () => presenter.executeGetRelatedNews(widget.news.idNews, _relatedNewsWrapper));
     }else if(typeRequest == DetailNewsPresenter.REQUEST_GET_COMMENT){
-      delay(5000, () => _presenter.executeGetComment(widget.news.idNews, _commentWrapper));
-    }else if(typeRequest == DetailNewsPresenter.REQUEST_LIKE){
-      delay(5000, (){
-        if(_isLikedWrapper.result){
-          _presenter.executeUnlike(widget.news.idNews, _isLikedWrapper);
-          return;
-        }
-        _presenter.executeLike(widget.news.idNews, _isLikedWrapper);
-      });
+      delay(5000, () => presenter.executeGetComment(widget.news.idNews, _commentWrapper));
     }else {
       super.onRequestTimeOut(typeRequest);
-    }
-  }
-
-
-  @override
-  void onResponseError(int typeRequest, ResponseException exception) {
-    if(typeRequest != DetailNewsPresenter.REQUEST_LIKE){
-      super.onResponseError(typeRequest, exception);
     }
   }
 
@@ -157,22 +119,7 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
   }
 
   @override
-  void onSuccessLike() {
-    setState(() {
-      widget.news.likes = (int.parse(widget.news.likes) + 1).toString();
-    });
-  }
-
-  @override
-  void onSuccessDislike() {
-    setState(() {
-      widget.news.likes = (int.parse(widget.news.likes) - 1).toString();
-    });
-  }
-
-  @override
   void onSuccessPostComment() {
-    Fluttertoast.showToast(msg: "Terima kasih atas komentar anda dan sedang kami moderasi");
     _commentController.text = "";
   }
 
@@ -185,7 +132,7 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
         title: Image.asset("assets/images/logo_toolbar.png"),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back_ios),
           color: Colors.black,
           onPressed: (){
             finish();
@@ -320,33 +267,23 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
                     child: Row(
                       children: <Widget>[
                         IconButton(
-                          icon: RequestWrapperWidget(
-                            requestWrapper: _isLikedWrapper,
-                            placeholder: Shimmer.fromColors(
-                              child: Container(
-                                width: 24,
-                                height: 24,
-                                color: Colors.grey[300],
-                              ),
-                              baseColor: Colors.grey[300],
-                              highlightColor: Colors.white,
-                            ),
-                            builder: (ctx, data) => Consumer<LikeProvider>(
-                              builder: (_, provider, __){
-                                if(provider.likedNews.contains(widget.news.idNews)){
-                                  return Icon(Icons.favorite, color: ColorUtils.primary);
-                                }
-                                return Icon(Icons.favorite_border, color: ColorUtils.primary);
-                              },
-                            ),
+                          icon: Consumer<LikeProvider>(
+                            builder: (_, provider, __){
+                              if(provider.likedNews.contains(widget.news.idNews)){
+                                return Icon(Icons.favorite, color: ColorUtils.primary);
+                              }
+                              return Icon(Icons.favorite_border, color: ColorUtils.primary);
+                            },
                           ),
                           onPressed: () {
                             if(user != null){
-                              if(_isLikedWrapper.result){
-                                _presenter.executeUnlike(widget.news.idNews, _isLikedWrapper);
+                              if(Provider.of<LikeProvider>(context).likedNews
+                                  .contains(widget.news.idNews)){
+                                presenter.executeUnlike(widget.news.idNews);
                                 return;
                               }
-                              _presenter.executeLike(widget.news.idNews, _isLikedWrapper);
+
+                              presenter.executeLike(widget.news.idNews);
                             }
                           },
                         ),
@@ -363,7 +300,9 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
 
                         SizedBox(width: 50),
 
-                        Icon(Icons.share, color: ColorUtils.primary),
+                        IconButton(icon: Icon(Icons.share, color: ColorUtils.primary),
+                          onPressed: () => Share.share("Check out My Apps here")
+                        ),
                         SizedBox(width: 5),
                         Text("Share this post",
                           textScaleFactor: 1.0,
@@ -485,7 +424,8 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
                 ),
                 IconButton(
                   icon: Icon(Icons.send),
-                  onPressed: () => _presenter.executeComment(widget.news.idNews, _commentController.text),
+                  onPressed: () => presenter.executeComment(widget.news.idNews, _commentController.text,
+                      _commentWrapper),
                   color: ColorUtils.primary,
                 )
               ],
@@ -495,6 +435,16 @@ class _DetailNewsState extends BaseState<DetailNews> implements DetailNewsDelega
       ),
     );
   }
+
+
+  @override
+  void onSuccessLike() => Provider.of<LikeProvider>(context).addLike(widget.news);
+
+  @override
+  void onSuccessUnlike() => Provider.of<LikeProvider>(context).removeLike(widget.news);
+
+  @override
+  void onAlreadyLiked() => Provider.of<LikeProvider>(context).alreadyLiked(widget.news);
 
   @override
   void dispose() {

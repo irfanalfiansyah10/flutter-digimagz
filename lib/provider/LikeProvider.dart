@@ -26,16 +26,12 @@ class LikeProvider extends ChangeNotifier{
   }
 
   void addLike(News news){
-    if(!totalLikeMap.containsKey(news.idNews)) return;
-
     totalLikeMap[news.idNews]++;
     likedNews.add(news.idNews);
     notifyListeners();
   }
 
   void removeLike(News news){
-    if(!totalLikeMap.containsKey(news.idNews)) return;
-
     totalLikeMap[news.idNews]--;
     likedNews.remove(news.idNews);
     notifyListeners();

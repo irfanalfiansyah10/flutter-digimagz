@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
 import 'package:digimagz/network/response/BaseResponse.dart';
+import 'package:digimagz/utilities/UrlUtils.dart';
 import 'package:dio/dio.dart';
 import 'BaseState.dart';
 
@@ -20,7 +21,7 @@ class BaseRepository{
     if(baseUrl != null) {
       dio.options.baseUrl = baseUrl;
     }else {
-      dio.options.baseUrl = "http://digimon.kristomoyo.com/api/";
+      dio.options.baseUrl = UrlUtils.URL+"api/";
     }
     dio.options.connectTimeout = 60000;
     dio.options.receiveTimeout = 60000;
@@ -37,9 +38,12 @@ class BaseRepository{
       int typeRequest,
       {
         CancelToken cancelToken,
-        String contentType = "application/json"
+        String contentType = "application/json",
+        bool throwOnResponseError = true
       }) {
-    return _execute(GET, url, params, typeRequest, cancelToken: cancelToken, contentType: contentType);
+    return _execute(GET, url, params, typeRequest,
+        cancelToken: cancelToken, contentType: contentType,
+        throwOnResponseError: throwOnResponseError);
   }
 
   Future<Response<String>> post(String url,
@@ -47,9 +51,12 @@ class BaseRepository{
       int typeRequest,
       {
         CancelToken cancelToken,
-        String contentType = "application/json"
+        String contentType = "application/json",
+        bool throwOnResponseError = true
       }){
-    return _execute(POST, url, params, typeRequest, cancelToken: cancelToken, contentType: contentType);
+    return _execute(POST, url, params, typeRequest,
+        cancelToken: cancelToken, contentType: contentType,
+        throwOnResponseError: throwOnResponseError);
   }
 
   Future<Response<String>> delete(String url,
@@ -57,9 +64,12 @@ class BaseRepository{
       int typeRequest,
       {
         CancelToken cancelToken,
-        String contentType = "application/json"
+        String contentType = "application/json",
+        bool throwOnResponseError = true
       }) {
-    return _execute(DELETE, url, params, typeRequest, cancelToken: cancelToken, contentType: contentType);
+    return _execute(DELETE, url, params, typeRequest,
+        cancelToken: cancelToken, contentType: contentType,
+        throwOnResponseError: throwOnResponseError);
   }
 
   Future<Response<String>> put(String url,
@@ -67,9 +77,14 @@ class BaseRepository{
       int typeRequest,
       {
         CancelToken cancelToken,
-        String contentType = "application/json"
+        String contentType = "application/json",
+        bool throwOnResponseError = true
       }) {
-    return _execute(PUT, url, params, typeRequest, cancelToken: cancelToken, contentType: contentType);
+    return _execute(PUT, url, params, typeRequest,
+        cancelToken: cancelToken,
+        contentType: contentType,
+        throwOnResponseError: throwOnResponseError
+    );
   }
 
   Future<Response<String>> formData(String url,
@@ -77,16 +92,23 @@ class BaseRepository{
       int typeRequest,
       {
         CancelToken cancelToken,
-        String contentType = "multipart/form-data"
+        String contentType = "multipart/form-data",
+        bool throwOnResponseError = true
       }){
     return _execute(POST, url, params, typeRequest,
         cancelToken: cancelToken,
         contentType: contentType,
-        isFormData: true);
+        isFormData: true,
+        throwOnResponseError: throwOnResponseError
+    );
   }
 
   Future<Response<String>> _execute(int method, String url, Map<String, dynamic> params,
-      int typeRequest, { CancelToken cancelToken, String contentType = "application/json", bool isFormData = false}) async {
+      int typeRequest, { CancelToken cancelToken,
+        String contentType = "application/json",
+        bool isFormData = false,
+        bool throwOnResponseError = true
+      }) async {
     _baseState.shouldShowLoading(typeRequest);
 
     var isConnected = await connectivityChecker();
@@ -126,9 +148,11 @@ class BaseRepository{
         return null;
       }
 
-      var baseResponse = BaseResponse.fromJson(jsonDecode(response.data));
-      if(!baseResponse.status){
-        throw ResponseException(msg: baseResponse.message);
+      if(throwOnResponseError) {
+        var baseResponse = BaseResponse.fromJson(jsonDecode(response.data));
+        if (!baseResponse.status) {
+          throw ResponseException(msg: baseResponse.message);
+        }
       }
 
       _baseState.shouldHideLoading(typeRequest);
@@ -138,6 +162,9 @@ class BaseRepository{
         if(e.message.contains("SocketException")){
           _baseState.shouldHideLoading(typeRequest);
           _baseState.onNoConnection(typeRequest);
+        }else if(e.message.contains("504")){
+          _baseState.shouldHideLoading(typeRequest);
+          _baseState.onRequestTimeOut(typeRequest);
         }else {
           _baseState.shouldHideLoading(typeRequest);
           _baseState.onUnknownError(typeRequest, e.message);

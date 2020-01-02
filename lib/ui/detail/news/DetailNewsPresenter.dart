@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:digimagz/ancestor/BasePresenter.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
-import 'package:mcnmr_common_ext/NonNullChecker.dart';
+import 'package:intl/intl.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:digimagz/network/response/CommentResponse.dart';
 import 'package:digimagz/network/response/NewsResponse.dart';
@@ -14,6 +12,7 @@ class DetailNewsPresenter extends BasePresenter{
   static const REQUEST_GET_COMMENT = 1;
   static const REQUEST_LIKE = 2;
   static const REQUEST_POST_COMMENT = 3;
+  static const REQUEST_CHECK_LIKE = 4;
 
   final DetailNewsDelegate _delegate;
 
@@ -39,28 +38,22 @@ class DetailNewsPresenter extends BasePresenter{
     wrapper.finishRequestIfNotNull(await repository.getComment(REQUEST_GET_COMMENT, params));
   }
 
-  void executeCheckLike(String idNews, RequestWrapper<bool> wrapper) async {
-    wrapper.doRequestKeepState();
-
+  void executeCheckLike(String idNews) async {
     var account = await AppPreference.getUser();
     var params = {
       "id_news" : idNews,
       "email" : account.email
     };
 
-    var result = await repository.getLikes(REQUEST_LIKE, params);
+    var result = await repository.getLikes(REQUEST_CHECK_LIKE, params);
     if(result != null){
-      var json = jsonDecode(result);
-
-      var isLiked = obtainValue(json["data"], "") == "Yes";
-
-      wrapper.finishRequest(isLiked);
+      if(result.status){
+        _delegate.onAlreadyLiked();
+      }
     }
   }
 
-  void executeLike(String idNews, RequestWrapper<bool> wrapper) async {
-    wrapper.doRequest();
-
+  void executeLike(String idNews) async {
     var account = await AppPreference.getUser();
     var params = {
       "id_news" : idNews,
@@ -70,17 +63,13 @@ class DetailNewsPresenter extends BasePresenter{
     var response = await repository.postLike(REQUEST_LIKE, params);
 
     if(response != null){
-      wrapper.finishRequest(true);
-
-      _delegate.onSuccessLike();
-    }else {
-      wrapper.finishRequest(false);
+      if(response.status){
+        _delegate.onSuccessLike();
+      }
     }
   }
 
-  void executeUnlike(String idNews, RequestWrapper<bool> wrapper) async {
-    wrapper.doRequest();
-
+  void executeUnlike(String idNews) async {
     var account = await AppPreference.getUser();
     Map<String, String> params = {
       "id_news" : idNews,
@@ -90,15 +79,14 @@ class DetailNewsPresenter extends BasePresenter{
     var response = await repository.deleteLike(REQUEST_LIKE, params);
 
     if(response != null){
-      wrapper.finishRequest(false);
-
-      _delegate.onSuccessDislike();
-    }else {
-      wrapper.finishRequest(true);
+      if(response.status){
+        _delegate.onSuccessUnlike();
+      }
     }
   }
 
-  void executeComment(String idNews, String comment) async {
+  void executeComment(String idNews, String comment, RequestWrapper<CommentResponse> wrapper) async {
+    wrapper.doRequestKeepState();
     var user = await AppPreference.getUser();
 
     var params = {
@@ -110,7 +98,22 @@ class DetailNewsPresenter extends BasePresenter{
     var result = repository.postComment(REQUEST_POST_COMMENT, params);
 
     if(result != null){
+      var newCommentList = <Comment>[];
+      var newComment = Comment();
+      newComment.idNews = idNews;
+      newComment.email = user.email;
+      newComment.commentText = comment;
+      newComment.dateComment = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+      newComment.userName = user.userName;
+      newComment.profilepicUrl = user.urlPic;
+
+      newCommentList.add(newComment);
+      newCommentList.addAll(wrapper.result.data);
+      var newCommentResponse = CommentResponse();
+      newCommentResponse.data = newCommentList;
+
       _delegate.onSuccessPostComment();
+      wrapper.finishRequest(newCommentResponse);
     }
   }
 }

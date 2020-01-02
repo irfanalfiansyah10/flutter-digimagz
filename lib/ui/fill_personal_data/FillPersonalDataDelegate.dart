@@ -1,0 +1,3 @@
+class FillPersonalDataDelegate {
+  void onSuccessChangePersonalData(){}
+}

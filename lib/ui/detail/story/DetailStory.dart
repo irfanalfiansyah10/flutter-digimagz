@@ -24,16 +24,17 @@ class DetailStory extends StatefulWidget {
   _DetailStoryState createState() => _DetailStoryState();
 }
 
-class _DetailStoryState extends BaseState<DetailStory> implements DetailStoryDelegate{
-  DetailStoryPresenter _presenter;
-
+class _DetailStoryState extends BaseState<DetailStory, DetailStoryPresenter>
+    implements DetailStoryDelegate{
   RequestWrapper<NewsResponse> _relatedNewsWrapper = RequestWrapper();
+
+  @override
+  DetailStoryPresenter initPresenter() => DetailStoryPresenter(this);
 
   @override
   void initState() {
     super.initState();
-    _presenter = DetailStoryPresenter(this);
-    _presenter.executeGetRelatedNews(widget.story.idCoverStory, _relatedNewsWrapper);
+    presenter.executeGetRelatedNews(widget.story.idCoverStory, _relatedNewsWrapper);
   }
 
   @override
@@ -56,7 +57,7 @@ class _DetailStoryState extends BaseState<DetailStory> implements DetailStoryDel
         title: Image.asset("assets/images/logo_toolbar.png"),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back_ios),
           color: Colors.black,
           onPressed: (){
             finish();

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:digimagz/ancestor/BasePresenter.dart';
 import 'package:digimagz/custom/dialog/LoadingDialog.dart';
 import 'package:digimagz/extension/ErrorMessaging.dart';
 import 'package:digimagz/network/response/BaseResponse.dart';
@@ -7,11 +8,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-abstract class BaseState<T extends StatefulWidget> extends State<T> {
+abstract class BaseState<T extends StatefulWidget, P extends BasePresenter> extends State<T> {
+  P presenter;
 
+  P initPresenter();
+
+  @mustCallSuper
   @override
   void initState() {
     super.initState();
+    presenter = initPresenter();
     WidgetsBinding.instance.addPostFrameCallback((_){
       afterWidgetBuilt();
     });
@@ -161,7 +167,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
 
   void iOSAlert({String title, String message, String negativeTitle, String positiveTitle,
     VoidCallback onNegative, VoidCallback onPositive, Color negativeColor, Color positiveColor}){
-    showDialog(
+    showCupertinoDialog(
         context: context,
         builder: (ctx) => CupertinoAlertDialog(
           title: Text(title,
