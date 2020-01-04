@@ -20,7 +20,8 @@ class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> 
 
   @override
   void afterWidgetBuilt() {
-    delay(2500, (){
+    delay(2500, () async {
+      await FlutterDownloader.initialize();
       FlutterDownloader.registerCallback(downloadCallback);
       navigateTo(MyApp.ROUTE_HOME, singleTop: true);
     });

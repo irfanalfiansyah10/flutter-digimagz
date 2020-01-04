@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/custom/view/text/StyledText.dart';
+import 'package:mcnmr_common_ext/FutureDelayed.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapperWidget.dart';
 import 'package:digimagz/extension/Size.dart';
@@ -42,6 +43,33 @@ class _DetailStoryState extends BaseState<DetailStory, DetailStoryPresenter>
 
   @override
   void shouldShowLoading(int typeRequest) {}
+
+  @override
+  void onRequestTimeOut(int typeRequest) {
+    if(typeRequest == DetailStoryPresenter.REQUEST_GET_RELATED_NEWS){
+      delay(5000, () => presenter.executeGetRelatedNews(widget.story.idCoverStory, _relatedNewsWrapper));
+    }else {
+      super.onRequestTimeOut(typeRequest);
+    }
+  }
+
+  @override
+  void onNoConnection(int typeRequest) {
+    if(typeRequest == DetailStoryPresenter.REQUEST_GET_RELATED_NEWS){
+      delay(5000, () => presenter.executeGetRelatedNews(widget.story.idCoverStory, _relatedNewsWrapper));
+    }else {
+      super.onNoConnection(typeRequest);
+    }
+  }
+
+  @override
+  void onUnknownError(int typeRequest, String msg) {
+    if(typeRequest == DetailStoryPresenter.REQUEST_GET_RELATED_NEWS){
+      delay(5000, () => presenter.executeGetRelatedNews(widget.story.idCoverStory, _relatedNewsWrapper));
+    }else {
+      super.onUnknownError(typeRequest, msg);
+    }
+  }
 
   @override
   void onNewsSelected(News news) {

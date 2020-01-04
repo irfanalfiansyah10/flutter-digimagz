@@ -22,19 +22,4 @@ class DetailStoryPresenter extends BasePresenter{
     }
 
   }
-
-  void executeGetRelatedNewsAsString(String idStory, RequestWrapper<String> wrapper) async {
-    wrapper.doRequest();
-
-    var params = {
-      "id" : idStory
-    };
-
-    var result = await repository.getNewsFromStoryAsString(REQUEST_GET_RELATED_NEWS, params);
-
-    if(result != null){
-      wrapper.finishRequest(result);
-      return;
-    }
-  }
 }

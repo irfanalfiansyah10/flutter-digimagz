@@ -10,16 +10,13 @@ import 'package:digimagz/ui/login/Login.dart';
 import 'package:digimagz/ui/login_email/LoginEmail.dart';
 import 'package:digimagz/ui/splash_screen/SplashScreen.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:provider/provider.dart';
 
 //export PATH="$PATH:/Users/apple/Documents/flutter/bin"
 
-void main() async {
-  await FlutterDownloader.initialize();
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   static const ROUTE_ROOT = "/";
@@ -50,25 +47,25 @@ class MyApp extends StatelessWidget {
         onGenerateRoute: (settings){
           switch(settings.name){
             case ROUTE_ROOT :
-              return MaterialPageRoute(builder: (ctx) => SplashScreen());
+              return CupertinoPageRoute(builder: (ctx) => SplashScreen());
             case ROUTE_HOME :
-              return MaterialPageRoute(builder: (ctx) => Home());
+              return CupertinoPageRoute(builder: (ctx) => Home());
             case ROUTE_LIST_NEWS :
-              return MaterialPageRoute(builder: (ctx) => ListNews(settings.arguments));
+              return CupertinoPageRoute(builder: (ctx) => ListNews(settings.arguments));
             case ROUTE_LOGIN :
-              return MaterialPageRoute(builder: (ctx) => Login());
+              return CupertinoPageRoute(builder: (ctx) => Login());
             case ROUTE_DETAIL_NEWS :
-              return MaterialPageRoute(builder: (ctx) => DetailNews(settings.arguments));
+              return CupertinoPageRoute(builder: (ctx) => DetailNews(settings.arguments));
             case ROUTE_DETAIL_STORY :
-              return MaterialPageRoute(builder: (ctx) => DetailStory(settings.arguments));
+              return CupertinoPageRoute(builder: (ctx) => DetailStory(settings.arguments));
             case ROUTE_LOGIN_EMAIL :
-              return MaterialPageRoute(builder: (ctx) => LoginEmail());
+              return CupertinoPageRoute(builder: (ctx) => LoginEmail());
             case ROUTE_FILL_PERSONAL_DATA :
-              return MaterialPageRoute(builder: (ctx) => FillPersonalData());
+              return CupertinoPageRoute(builder: (ctx) => FillPersonalData());
             case ROUTE_DOWNLOAD_PROGRESS :
-              return MaterialPageRoute(builder: (ctx) => DownloadProgress());
+              return CupertinoPageRoute(builder: (ctx) => DownloadProgress());
             default :
-              return MaterialPageRoute(builder: (ctx) => SplashScreen());
+              return CupertinoPageRoute(builder: (ctx) => SplashScreen());
           }
         },
 

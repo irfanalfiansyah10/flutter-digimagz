@@ -51,13 +51,16 @@ class _NewsItemState extends BaseState<NewsItem, NewsAdapterPresenter> {
   void shouldHideLoading(int typeRequest) {}
 
   @override
-  void onRequestTimeOut(int typeRequest) => delay(5000,
-          () => presenter.executeCheckLike(_likeWrapper, widget.news.idNews));
+  void onRequestTimeOut(int typeRequest) =>
+      delay(5000, () => presenter.executeCheckLike(_likeWrapper, widget.news.idNews));
 
   @override
-  void onNoConnection(int typeRequest) => delay(5000,
-          () => presenter.executeCheckLike(_likeWrapper, widget.news.idNews));
+  void onNoConnection(int typeRequest) =>
+      delay(5000, () => presenter.executeCheckLike(_likeWrapper, widget.news.idNews));
 
+  @override
+  void onUnknownError(int typeRequest, String msg) =>
+      delay(5000, () => presenter.executeCheckLike(_likeWrapper, widget.news.idNews));
 
   @override
   void onResponseError(int typeRequest, ResponseException exception) {}

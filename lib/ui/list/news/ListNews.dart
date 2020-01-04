@@ -55,6 +55,10 @@ class _ListNewsState extends BaseState<ListNews, ListNewsPresenter> implements L
   void onNoConnection(int typeRequest) => delay(5000, () => presenter.executeGetNews(widget.argument, _wrapper));
 
   @override
+  void onUnknownError(int typeRequest, String msg) =>
+      delay(5000, () => presenter.executeGetNews(widget.argument, _wrapper));
+
+  @override
   void onNewsSelected(News news) {
     navigateTo(MyApp.ROUTE_DETAIL_NEWS, arguments: news);
   }

@@ -30,7 +30,7 @@ class _EmagzFragmentState extends BaseState<EmagzFragment, EmagzFragmentPresente
   ReceivePort _port = ReceivePort();
 
   @override
-  EmagzFragmentPresenter initPresenter() => EmagzFragmentPresenter(this, this);
+  EmagzFragmentPresenter initPresenter() => EmagzFragmentPresenter(this);
 
   @override
   void initState() {
@@ -58,7 +58,7 @@ class _EmagzFragmentState extends BaseState<EmagzFragment, EmagzFragmentPresente
   void onRequestTimeOut(int typeRequest) => delay(5000, () => presenter.executeGetEmagz(_emagzWrapper));
 
   @override
-  void onUnknownError(int typeRequest, String msg) {}
+  void onUnknownError(int typeRequest, String msg) => delay(5000, () => presenter.executeGetEmagz(_emagzWrapper));
 
   @override
   void shouldHideLoading(int typeRequest) {}

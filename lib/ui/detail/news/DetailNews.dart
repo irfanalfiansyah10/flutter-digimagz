@@ -72,6 +72,8 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
 
     if(user != null){
       presenter.executeCheckLike(widget.news.idNews);
+      presenter.executePostViews(widget.news.idNews);
+
       setState(() => isUserLoggedIn = true);
     }
   }
@@ -98,6 +100,12 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
       delay(5000, () => presenter.executeGetRelatedNews(widget.news.idNews, _relatedNewsWrapper));
     }else if(typeRequest == DetailNewsPresenter.REQUEST_GET_COMMENT){
       delay(5000, () => presenter.executeGetComment(widget.news.idNews, _commentWrapper));
+    }else if(typeRequest == DetailNewsPresenter.REQUEST_CHECK_LIKE){
+      delay(5000, () => presenter.executeCheckLike(widget.news.idNews));
+    }else if(typeRequest == DetailNewsPresenter.REQUEST_POST_VIEWS){
+      delay(5000, () => presenter.executePostViews(widget.news.idNews));
+    }else if(typeRequest == DetailNewsPresenter.REQUEST_POST_SHARE){
+      delay(5000, () => presenter.executePostShare(widget.news.idNews));
     }else {
       super.onNoConnection(typeRequest);
     }
@@ -109,8 +117,31 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
       delay(5000, () => presenter.executeGetRelatedNews(widget.news.idNews, _relatedNewsWrapper));
     }else if(typeRequest == DetailNewsPresenter.REQUEST_GET_COMMENT){
       delay(5000, () => presenter.executeGetComment(widget.news.idNews, _commentWrapper));
+    }else if(typeRequest == DetailNewsPresenter.REQUEST_CHECK_LIKE){
+      delay(5000, () => presenter.executeCheckLike(widget.news.idNews));
+    }else if(typeRequest == DetailNewsPresenter.REQUEST_POST_VIEWS){
+      delay(5000, () => presenter.executePostViews(widget.news.idNews));
+    }else if(typeRequest == DetailNewsPresenter.REQUEST_POST_SHARE){
+      delay(5000, () => presenter.executePostShare(widget.news.idNews));
     }else {
       super.onRequestTimeOut(typeRequest);
+    }
+  }
+
+  @override
+  void onUnknownError(int typeRequest, String msg) {
+    if(typeRequest == DetailNewsPresenter.REQUEST_GET_RELATED_NEWS){
+      delay(5000, () => presenter.executeGetRelatedNews(widget.news.idNews, _relatedNewsWrapper));
+    }else if(typeRequest == DetailNewsPresenter.REQUEST_GET_COMMENT){
+      delay(5000, () => presenter.executeGetComment(widget.news.idNews, _commentWrapper));
+    }else if(typeRequest == DetailNewsPresenter.REQUEST_CHECK_LIKE){
+      delay(5000, () => presenter.executeCheckLike(widget.news.idNews));
+    }else if(typeRequest == DetailNewsPresenter.REQUEST_POST_VIEWS){
+      delay(5000, () => presenter.executePostViews(widget.news.idNews));
+    }else if(typeRequest == DetailNewsPresenter.REQUEST_POST_SHARE){
+      delay(5000, () => presenter.executePostShare(widget.news.idNews));
+    }else {
+      super.onUnknownError(typeRequest, msg);
     }
   }
 
@@ -301,7 +332,12 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
                         SizedBox(width: 50),
 
                         IconButton(icon: Icon(Icons.share, color: ColorUtils.primary),
-                          onPressed: () => Share.share("Check out My Apps here")
+                          onPressed: () async {
+                            await Share.share("Check out My Apps here");
+                            if(isUserLoggedIn){
+                              presenter.executePostShare(widget.news.idNews);
+                            }
+                          }
                         ),
                         SizedBox(width: 5),
                         Text("Share this post",
@@ -424,8 +460,7 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
                 ),
                 IconButton(
                   icon: Icon(Icons.send),
-                  onPressed: () => presenter.executeComment(widget.news.idNews, _commentController.text,
-                      _commentWrapper),
+                  onPressed: () => presenter.executeComment(widget.news.idNews, _commentController.text),
                   color: ColorUtils.primary,
                 )
               ],

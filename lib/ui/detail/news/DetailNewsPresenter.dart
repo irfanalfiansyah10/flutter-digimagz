@@ -1,6 +1,5 @@
 import 'package:digimagz/ancestor/BasePresenter.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
-import 'package:intl/intl.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:digimagz/network/response/CommentResponse.dart';
 import 'package:digimagz/network/response/NewsResponse.dart';
@@ -13,6 +12,8 @@ class DetailNewsPresenter extends BasePresenter{
   static const REQUEST_LIKE = 2;
   static const REQUEST_POST_COMMENT = 3;
   static const REQUEST_CHECK_LIKE = 4;
+  static const REQUEST_POST_VIEWS = 5;
+  static const REQUEST_POST_SHARE = 6;
 
   final DetailNewsDelegate _delegate;
 
@@ -85,8 +86,7 @@ class DetailNewsPresenter extends BasePresenter{
     }
   }
 
-  void executeComment(String idNews, String comment, RequestWrapper<CommentResponse> wrapper) async {
-    wrapper.doRequestKeepState();
+  void executeComment(String idNews, String comment) async {
     var user = await AppPreference.getUser();
 
     var params = {
@@ -98,22 +98,30 @@ class DetailNewsPresenter extends BasePresenter{
     var result = repository.postComment(REQUEST_POST_COMMENT, params);
 
     if(result != null){
-      var newCommentList = <Comment>[];
-      var newComment = Comment();
-      newComment.idNews = idNews;
-      newComment.email = user.email;
-      newComment.commentText = comment;
-      newComment.dateComment = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
-      newComment.userName = user.userName;
-      newComment.profilepicUrl = user.urlPic;
-
-      newCommentList.add(newComment);
-      newCommentList.addAll(wrapper.result.data);
-      var newCommentResponse = CommentResponse();
-      newCommentResponse.data = newCommentList;
-
-      _delegate.onSuccessPostComment();
-      wrapper.finishRequest(newCommentResponse);
+      state.alert(title: "Terima Kasih",
+        message: "Komentar Anda sedang kami moderasi",
+        positiveTitle: "Tutup"
+      );
     }
+  }
+
+  void executePostViews(String idNews) async {
+    var user = await AppPreference.getUser();
+    var params = {
+      "id_news" : idNews,
+      "email" : user.email
+    };
+
+    repository.postView(REQUEST_POST_VIEWS, params);
+  }
+
+  void executePostShare(String idNews) async {
+    var user = await AppPreference.getUser();
+    var params = {
+      "id_news" : idNews,
+      "email" : user.email
+    };
+
+    repository.postShare(REQUEST_POST_SHARE, params);
   }
 }

@@ -37,7 +37,7 @@ abstract class BaseState<T extends StatefulWidget, P extends BasePresenter> exte
 
   void navigateTo(String destination, {bool singleTop = false, dynamic arguments}) async {
     if(singleTop){
-      Navigator.of(context).pushReplacementNamed(destination, arguments: arguments);
+      Navigator.of(context).pushNamedAndRemoveUntil(destination, (_) => false, arguments: arguments);
     }else {
       var result = await Navigator.of(context)
           .pushNamed(destination, arguments: arguments);
@@ -51,6 +51,10 @@ abstract class BaseState<T extends StatefulWidget, P extends BasePresenter> exte
 
   void navigateAndFinishCurrent(String destination, {dynamic arguments}) async {
     Navigator.of(context).popAndPushNamed(destination, arguments: arguments);
+  }
+
+  void finishUntil(String destination){
+    Navigator.of(context).popUntil((route) => route.settings.name == destination);
   }
 
   void finish({dynamic result}){

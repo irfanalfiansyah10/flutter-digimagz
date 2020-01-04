@@ -86,16 +86,6 @@ class Repository extends BaseRepository {
     return null;
   }
 
-  Future<String> getNewsFromStoryAsString(int typeRequest, Map<String, dynamic> params) async {
-    var response = await get("newscover/index_get", params, typeRequest);
-
-    if(response != null){
-      return response.data;
-    }
-
-    return null;
-  }
-
   Future<CommentResponse> getComment(int typeRequest, Map<String, dynamic> params) async {
     var response = await get("comments/index_get", params, typeRequest);
 
@@ -158,6 +148,26 @@ class Repository extends BaseRepository {
 
   Future<BaseResponse> postLike(int typeRequest, Map<String, dynamic> params) async {
     var response = await post("likes/index_post", params, typeRequest, throwOnResponseError: false);
+
+    if(response != null){
+      return BaseResponse.fromJson(jsonDecode(response.data));
+    }
+
+    return null;
+  }
+
+  Future<BaseResponse> postView(int typeRequest, Map<String, dynamic> params) async {
+    var response = await post("dummy/click", params, typeRequest, throwOnResponseError: false);
+
+    if(response != null){
+      return BaseResponse.fromJson(jsonDecode(response.data));
+    }
+
+    return null;
+  }
+
+  Future<BaseResponse> postShare(int typeRequest, Map<String, dynamic> params) async {
+    var response = await post("dummy/share", params, typeRequest, throwOnResponseError: false);
 
     if(response != null){
       return BaseResponse.fromJson(jsonDecode(response.data));

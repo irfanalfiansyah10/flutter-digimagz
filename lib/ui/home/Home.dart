@@ -50,6 +50,12 @@ class _HomeState extends BaseState<Home, HomePresenter> {
   }
 
   @override
+  void onNavigationResume(String from) {
+    print("Resumed");
+    afterWidgetBuilt();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

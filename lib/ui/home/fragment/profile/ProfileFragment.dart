@@ -5,6 +5,7 @@ import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/network/response/BaseResponse.dart';
 import 'package:digimagz/provider/LikeProvider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mcnmr_common_ext/FutureDelayed.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapperWidget.dart';
 import 'package:digimagz/extension/Size.dart';
@@ -42,21 +43,48 @@ class _ProfileFragmentState extends BaseState<ProfileFragment, ProfileFragmentPr
   ProfileFragmentPresenter initPresenter() => ProfileFragmentPresenter(this, this);
 
   @override
-  void afterWidgetBuilt() {
-    presenter.getAccount(_userWrapper);
-  }
+  void afterWidgetBuilt() => presenter.getAccount(_userWrapper);
 
   @override
   void shouldHideLoading(int typeRequest) {
-    if(typeRequest == ProfileFragmentPresenter.CHANGE_AVATAR){
+    if(typeRequest == ProfileFragmentPresenter.CHANGE_AVATAR
+        || typeRequest == ProfileFragmentPresenter.REQUEST_LOGOUT){
       super.shouldHideLoading(typeRequest);
     }
   }
 
   @override
   void shouldShowLoading(int typeRequest) {
-    if(typeRequest == ProfileFragmentPresenter.CHANGE_AVATAR){
+    if(typeRequest == ProfileFragmentPresenter.CHANGE_AVATAR
+        || typeRequest == ProfileFragmentPresenter.REQUEST_LOGOUT){
       super.shouldShowLoading(typeRequest);
+    }
+  }
+
+  @override
+  void onRequestTimeOut(int typeRequest) {
+    if(typeRequest == ProfileFragmentPresenter.REQUEST_GET_USER){
+      delay(5000, () => presenter.getAccount(_userWrapper));
+    }else {
+      super.onRequestTimeOut(typeRequest);
+    }
+  }
+
+  @override
+  void onNoConnection(int typeRequest) {
+    if(typeRequest == ProfileFragmentPresenter.REQUEST_GET_USER){
+      delay(5000, () => presenter.getAccount(_userWrapper));
+    }else {
+      super.onNoConnection(typeRequest);
+    }
+  }
+
+  @override
+  void onUnknownError(int typeRequest, String msg) {
+    if(typeRequest == ProfileFragmentPresenter.REQUEST_GET_USER){
+      delay(5000, () => presenter.getAccount(_userWrapper));
+    }else {
+      super.onUnknownError(typeRequest, msg);
     }
   }
 

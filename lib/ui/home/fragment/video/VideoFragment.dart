@@ -44,6 +44,10 @@ class _VideoFragmentState extends BaseState<VideoFragment, VideoFragmentPresente
   void onRequestTimeOut(int typeRequest) => delay(5000, () => presenter.executeGetVideo(_youtubeWrapper));
 
   @override
+  void onUnknownError(int typeRequest, String msg) =>
+      delay(5000, () => presenter.executeGetVideo(_youtubeWrapper));
+
+  @override
   void onPlayVideo(YoutubeVideo video) {
     FlutterYoutube.playYoutubeVideoByUrl(
       apiKey: "AIzaSyBXmYa9XW8pUIVu3_jfZRH1GuloT8d1tgo",

@@ -56,6 +56,8 @@ class _HomeFragmentState extends BaseState<HomeFragment, HomeFragmentPresenter>
       delay(5000, () => presenter.executeGetNewsTrending(_trendingWrapper));
     }else if(typeRequest == HomeFragmentPresenter.REQUEST_GET_STORY){
       delay(5000, () => presenter.executeGetStory(_storyWrapper));
+    }else {
+      super.onNoConnection(typeRequest);
     }
   }
 
@@ -69,6 +71,23 @@ class _HomeFragmentState extends BaseState<HomeFragment, HomeFragmentPresenter>
       delay(5000, () => presenter.executeGetNewsTrending(_trendingWrapper));
     }else if(typeRequest == HomeFragmentPresenter.REQUEST_GET_STORY){
       delay(5000, () => presenter.executeGetStory(_storyWrapper));
+    }else {
+      super.onRequestTimeOut(typeRequest);
+    }
+  }
+
+  @override
+  void onUnknownError(int typeRequest, String msg) {
+    if(typeRequest == HomeFragmentPresenter.REQUEST_GET_SLIDER){
+      delay(5000, () => presenter.executeGetSlider(_sliderWrapper));
+    }else if(typeRequest == HomeFragmentPresenter.REQUEST_GET_NEWS){
+      delay(5000, () => presenter.executeGetNews(_newsWrapper));
+    }else if(typeRequest == HomeFragmentPresenter.REQUEST_GET_NEWS_TREND){
+      delay(5000, () => presenter.executeGetNewsTrending(_trendingWrapper));
+    }else if(typeRequest == HomeFragmentPresenter.REQUEST_GET_STORY){
+      delay(5000, () => presenter.executeGetStory(_storyWrapper));
+    }else {
+      super.onUnknownError(typeRequest, msg);
     }
   }
 

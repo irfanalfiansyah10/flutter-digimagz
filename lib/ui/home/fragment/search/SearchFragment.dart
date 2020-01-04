@@ -55,6 +55,9 @@ class _SearchFragmentState extends BaseState<SearchFragment, SearchFragmentPrese
   void onNoConnection(int typeRequest) => delay(5000, () => presenter.executeGetNews(_wrapper));
 
   @override
+  void onUnknownError(int typeRequest, String msg) => delay(5000, () => presenter.executeGetNews(_wrapper));
+
+  @override
   void onNewsSelected(News news) {
     navigateTo(MyApp.ROUTE_DETAIL_NEWS, arguments: news);
   }

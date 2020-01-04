@@ -8,8 +8,6 @@ import 'package:digimagz/network/response/UserResponse.dart';
 import 'package:digimagz/preferences/AppPreference.dart';
 import 'package:digimagz/ui/home/fragment/profile/ProfileFragmentDelegate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class ProfileFragmentPresenter extends BasePresenter{
   static const REQUEST_LOGOUT = 1;
@@ -57,8 +55,6 @@ class ProfileFragmentPresenter extends BasePresenter{
   void logout() async {
     state.shouldShowLoading(REQUEST_LOGOUT);
 
-    await GoogleSignIn().disconnect();
-    await FacebookLogin().logOut();
     await FirebaseAuth.instance.signOut();
     await AppPreference.removeUser();
 
