@@ -17,7 +17,7 @@ class BaseRepository{
   Dio dio = Dio();
 
   BaseRepository(this._baseState, {String baseUrl}){
-    dio.interceptors.add(LogInterceptor(responseBody: true));
+    dio.interceptors.add(LogInterceptor(responseBody: false));
     if(baseUrl != null) {
       dio.options.baseUrl = baseUrl;
     }else {

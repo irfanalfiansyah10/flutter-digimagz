@@ -67,8 +67,15 @@ class News {
     status = obtainValue(json["STATUS"], "");
 
     newsImage = List();
+
     if(json["NEWS_IMAGE"] != null){
-      json["NEWS_IMAGE"].forEach((it) => newsImage.add(it));
+      json["NEWS_IMAGE"].forEach((it){
+        if(it == null){
+          newsImage.add("");
+        }else {
+          newsImage.add(it);
+        }
+      });
     }
   }
 }

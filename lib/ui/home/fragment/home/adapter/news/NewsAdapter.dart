@@ -8,7 +8,6 @@ import 'package:digimagz/extension/Size.dart';
 import 'package:digimagz/network/response/NewsResponse.dart';
 import 'package:digimagz/ui/home/fragment/home/adapter/news/NewsAdapterPresenter.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
-import 'package:digimagz/utilities/UrlUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +79,7 @@ class _NewsItemState extends BaseState<NewsItem, NewsAdapterPresenter> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               CachedNetworkImage(
-                imageUrl: UrlUtils.getUrlForImage(widget.news, 0),
+                imageUrl: widget.news.newsImage.length > 0 ? widget.news.newsImage[0] : "",
                 imageBuilder: (ctx, provider) => Container(
                   width: adaptiveWidth(context, 130),
                   height: adaptiveWidth(context, 130),
@@ -107,11 +106,18 @@ class _NewsItemState extends BaseState<NewsItem, NewsAdapterPresenter> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(height: 15),
-                    Text(widget.news.titleNews,
-                      textScaleFactor: 1.0,
-                      style: TextStyle(color: Colors.black,
+                    Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: Text(widget.news.titleNews,
+                        textScaleFactor: 1.0,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.black,
                           fontSize: 14,
-                          fontWeight: FontWeight.bold),),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                     Spacer(),
                     Row(
                       children: <Widget>[

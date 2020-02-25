@@ -25,7 +25,7 @@ class VideoItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             CachedNetworkImage(
-              imageUrl: video.urlDefaultThumbnail,
+              imageUrl: video.urlLargeThumbnail,
               imageBuilder: (ctx, provider) => Container(
                 width: double.infinity,
                 height: adaptiveWidth(context, 250),

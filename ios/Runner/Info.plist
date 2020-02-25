@@ -39,6 +39,10 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FDAllFilesDownloadedMessage</key>
+	<string>All files have been downloaded</string>
+	<key>FDMaximumConcurrentTasks</key>
+	<integer>1000</integer>
 	<key>FacebookAppID</key>
 	<string>733494387113231</string>
 	<key>FacebookDisplayName</key>
@@ -52,6 +56,15 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires access to open camera for changing profile image.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app requires access to the photo library for changing profile image.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -76,18 +89,5 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key><true/>
-    </dict>
-    <key>FDMaximumConcurrentTasks</key>
-    <integer>1000</integer>
-    <key>FDAllFilesDownloadedMessage</key>
-    <string>All files have been downloaded</string>
-    
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>This app requires access to the photo library for changing profile image.</string>
-    <key>NSCameraUsageDescription</key>
-    <string>This app requires access to open camera for changing profile image.</string>
 </dict>
 </plist>
