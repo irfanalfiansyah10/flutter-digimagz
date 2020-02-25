@@ -12,11 +12,15 @@ import 'package:digimagz/ui/splash_screen/SplashScreen.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:provider/provider.dart';
 
 //export PATH="$PATH:/Users/apple/Documents/flutter/bin"
 
-void main() => runApp(MyApp());
+void main() async {
+  await FlutterDownloader.initialize();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   static const ROUTE_ROOT = "/";
