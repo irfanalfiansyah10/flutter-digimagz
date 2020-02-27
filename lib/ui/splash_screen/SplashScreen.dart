@@ -1,11 +1,9 @@
-import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/main.dart';
 import 'package:digimagz/ui/splash_screen/SplashScreenPresenter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:mcnmr_common_ext/FutureDelayed.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -21,14 +19,8 @@ class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> 
   @override
   void afterWidgetBuilt() {
     delay(2500, () async {
-      //FlutterDownloader.registerCallback(downloadCallback);
       navigateTo(MyApp.ROUTE_HOME, singleTop: true);
     });
-  }
-
-  static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
-    final SendPort send = IsolateNameServer.lookupPortByName('downloader_send_port');
-    send.send([id, status, progress]);
   }
 
   @override

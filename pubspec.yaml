@@ -27,7 +27,6 @@ dependencies:
   connectivity:
   dio:
   fluttertoast:
-  google_sign_in:
   shared_preferences:
   shimmer:
   cached_network_image: 2.0.0
@@ -35,23 +34,30 @@ dependencies:
   flutter_svg:
   url_launcher:
   flutter_youtube:
-  firebase_auth:
-  firebase_core:
-  firebase_messaging:
-  flutter_facebook_login:
   flutter_widget_from_html:
   mcnmr_request_wrapper: 0.0.4
   mcnmr_common_ext:
   mcnmr_wrap_height_gridview:
   pull_to_refresh:
   provider: 4.0.0
-  flutter_downloader:
   image_picker:
   share:
   path_provider:
   open_file:
+  moor_flutter: 2.0.0
+  permission_handler: 4.1.0
+
+  # Uncomment this later
+  # firebase_auth:
+  # firebase_core:
+  # firebase_messaging:
+  # flutter_facebook_login:
+  # google_sign_in:
+
 
 dev_dependencies:
+  moor_generator: ^2.0.1
+  build_runner:
   flutter_test:
     sdk: flutter
 

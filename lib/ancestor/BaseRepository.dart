@@ -103,6 +103,55 @@ class BaseRepository{
     );
   }
 
+  void download(int typeRequest, String urlPath, String savePath, ProgressCallback callback,
+      { Function(Response) completion, CancelToken cancelToken}) async {
+    _baseState.shouldShowLoading(typeRequest);
+
+    var isConnected = await connectivityChecker();
+    if(!isConnected){
+      _baseState.shouldHideLoading(typeRequest);
+      _baseState.onNoConnection(typeRequest);
+      return null;
+    }
+
+    try {
+      var result = await dio.download(
+          urlPath,
+          savePath,
+          onReceiveProgress: callback,
+          options: Options(
+              receiveTimeout: 24 * 60 * 60 * 1000,
+              sendTimeout: 24 * 60 * 60 * 1000
+          ),
+          deleteOnError: true,
+          cancelToken: cancelToken
+      );
+
+      _baseState.shouldHideLoading(typeRequest);
+
+      if (completion != null) {
+        completion(result);
+      }
+    } on DioError catch(e){
+      if(e.type == DioErrorType.CANCEL) {
+        _baseState.shouldHideLoading(typeRequest);
+      }else if(e.type == DioErrorType.CONNECT_TIMEOUT ||
+          e.type == DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == DioErrorType.SEND_TIMEOUT){
+        _baseState.shouldHideLoading(typeRequest);
+        _baseState.onRequestTimeOut(typeRequest);
+      }else {
+        if(e.message.contains("SocketException")){
+          _baseState.shouldHideLoading(typeRequest);
+          _baseState.onNoConnection(typeRequest);
+        }else {
+          _baseState.shouldHideLoading(typeRequest);
+          _baseState.onUnknownError(typeRequest, e.message);
+        }
+      }
+    }
+  }
+
   Future<Response<String>> _execute(int method, String url, Map<String, dynamic> params,
       int typeRequest, { CancelToken cancelToken,
         String contentType = "application/json",

@@ -64,15 +64,6 @@ class _HomeState extends BaseState<Home, HomePresenter> {
         title: Center(
           child: Image.asset("assets/images/logo_toolbar.png"),
         ),
-        actions: <Widget>[
-          Visibility(
-            visible: _currentPosition == 3,
-            child: IconButton(
-              icon: Icon(Icons.folder, color: Colors.black.withOpacity(0.5)),
-              onPressed: () => navigateTo(MyApp.ROUTE_DOWNLOAD_PROGRESS),
-            ),
-          )
-        ],
       ),
       body: SafeArea(
         child: IndexedStack(
