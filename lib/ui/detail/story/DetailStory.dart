@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/custom/view/text/StyledText.dart';
+import 'package:digimagz/utilities/ImageUtils.dart';
 import 'package:mcnmr_common_ext/FutureDelayed.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapperWidget.dart';
@@ -117,6 +118,16 @@ class _DetailStoryState extends BaseState<DetailStory, DetailStoryPresenter>
                   ),
                   baseColor: Colors.grey[300],
                   highlightColor: Colors.white,
+                ),
+                errorWidget: (_, __, ___) => Container(
+                  width: double.infinity,
+                  height: adaptiveWidth(context, 230),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(ImageUtils.mqdefault),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
               HtmlWidget(widget.story.summary),

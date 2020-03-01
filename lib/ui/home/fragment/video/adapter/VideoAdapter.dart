@@ -3,6 +3,7 @@ import 'package:digimagz/extension/Size.dart';
 import 'package:digimagz/network/response/YoutubeResponse.dart';
 import 'package:digimagz/ui/home/fragment/video/VideoFragmentDelegate.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
+import 'package:digimagz/utilities/ImageUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -45,13 +46,23 @@ class VideoItem extends StatelessWidget {
                 ),
               ),
               placeholder: (ctx, url) => Shimmer.fromColors(
-                  child: Container(
-                    width: double.infinity,
-                    height: adaptiveWidth(context, 250),
-                    color: Colors.grey[300],
+                child: Container(
+                  width: double.infinity,
+                  height: adaptiveWidth(context, 250),
+                  color: Colors.grey[300],
+                ),
+                baseColor: Colors.grey[300],
+                highlightColor: Colors.white,
+              ),
+              errorWidget: (_, __, ___) => Container(
+                width: double.infinity,
+                height: adaptiveWidth(context, 250),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(ImageUtils.mqdefault),
+                    fit: BoxFit.cover,
                   ),
-                  baseColor: Colors.grey[300],
-                  highlightColor: Colors.white
+                ),
               ),
             ),
             Padding(

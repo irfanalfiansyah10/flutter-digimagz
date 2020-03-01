@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digimagz/extension/Size.dart';
 import 'package:digimagz/network/response/NewsResponse.dart';
+import 'package:digimagz/utilities/ImageUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -34,6 +35,16 @@ class ImageNewsItem extends StatelessWidget {
           ),
           baseColor: Colors.grey[300],
           highlightColor: Colors.white,
+        ),
+        errorWidget: (_, __, ___) => Container(
+          width: double.infinity,
+          height: adaptiveWidth(context, 230),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(ImageUtils.mqdefault),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
       ),
     );

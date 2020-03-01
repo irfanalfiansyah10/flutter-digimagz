@@ -89,6 +89,7 @@ flutter:
   - assets/images/ic_facebook.svg
   - assets/images/ic_google.svg
   - assets/images/missing_avatar.jpg
+  - assets/images/mqdefault.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
