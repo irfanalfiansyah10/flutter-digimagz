@@ -4,12 +4,9 @@ import 'package:digimagz/network/response/UserResponse.dart';
 import 'package:digimagz/preferences/AppPreference.dart';
 import 'package:digimagz/ui/login/LoginDelegate.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-/**
- * Uncomment this later
- * import 'package:firebase_auth/firebase_auth.dart';
- * import 'package:flutter_facebook_login/flutter_facebook_login.dart';
- * import 'package:google_sign_in/google_sign_in.dart';
- */
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPresenter extends BasePresenter{
   static const REQUEST_LOGIN = 0;
@@ -20,7 +17,6 @@ class LoginPresenter extends BasePresenter{
 
 
   void executeSignInGoogle() async {
-    /** Uncomment this later
     try{
       var signIn = await GoogleSignIn().signIn();
       var auth = await signIn.authentication;
@@ -34,11 +30,10 @@ class LoginPresenter extends BasePresenter{
       _executePostUserToApi(user.email, user.displayName, user.photoUrl);
     }on Exception catch(e){
       Fluttertoast.showToast(msg: e.toString());
-    }*/
+    }
   }
 
   void executeSignInFacebook() async {
-    /** Uncomment this later
     try {
       var signIn = await FacebookLogin().logIn(["email"]);
 
@@ -62,7 +57,7 @@ class LoginPresenter extends BasePresenter{
       _executePostUserToApi(user.email, user.displayName, user.photoUrl);
     }on Exception catch(e){
       Fluttertoast.showToast(msg: e.toString());
-    }*/
+    }
   }
 
   void _executePostUserToApi(String email, String name, String picUrl) async {
