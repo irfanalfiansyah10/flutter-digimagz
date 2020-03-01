@@ -2,10 +2,7 @@ import 'package:digimagz/ancestor/BasePresenter.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/preferences/AppPreference.dart';
 import 'package:digimagz/ui/login_email/LoginEmailDelegate.dart';
-
-/** Uncomment this later
- * import 'package:firebase_auth/firebase_auth.dart';
- */
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginEmailPresenter extends BasePresenter {
   static const REQUEST_CHECK_EMAIL_AVAILABILITY = 0;
@@ -14,14 +11,11 @@ class LoginEmailPresenter extends BasePresenter {
 
   final LoginEmailDelegate _delegate;
 
-  /** Uncomment this later
-   * var _auth = FirebaseAuth.instance;
-   */
+  var _auth = FirebaseAuth.instance;
 
   LoginEmailPresenter(BaseState state, this._delegate) : super(state);
 
   void checkEmailAvailability(String email) async {
-    /** Uncomment this later
     state.shouldShowLoading(REQUEST_CHECK_EMAIL_AVAILABILITY);
     var result = await _auth.fetchSignInMethodsForEmail(email: email);
     state.shouldHideLoading(REQUEST_CHECK_EMAIL_AVAILABILITY);
@@ -49,20 +43,18 @@ class LoginEmailPresenter extends BasePresenter {
       }
     }
 
-    _delegate.onEmailNotRegistered();*/
+    _delegate.onEmailNotRegistered();
   }
 
   void login(String email, String password) async {
-    /** Uncomment this later
     state.shouldShowLoading(REQUEST_LOGIN);
     var user = (await _auth.signInWithEmailAndPassword(email: email, password: password)).user;
     state.shouldHideLoading(REQUEST_LOGIN);
 
-    _executeGetUser(user.email);*/
+    _executeGetUser(user.email);
   }
 
   void createUser(String email, String password, String name) async {
-    /** Uncomment this later
     state.shouldShowLoading(REQUEST_CREATE_USER);
     var user = (await _auth.createUserWithEmailAndPassword(email: email, password: password)).user;
 
@@ -75,7 +67,7 @@ class LoginEmailPresenter extends BasePresenter {
 
     state.shouldHideLoading(REQUEST_CREATE_USER);
 
-    _executePostUserToApi(user.email, user.displayName, user.photoUrl);*/
+    _executePostUserToApi(user.email, user.displayName, user.photoUrl);
   }
 
   void _executePostUserToApi(String email, String name, String picUrl) async {

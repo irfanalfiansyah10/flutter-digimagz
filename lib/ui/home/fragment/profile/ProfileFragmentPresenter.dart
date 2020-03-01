@@ -7,11 +7,7 @@ import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:digimagz/network/response/UserResponse.dart';
 import 'package:digimagz/preferences/AppPreference.dart';
 import 'package:digimagz/ui/home/fragment/profile/ProfileFragmentDelegate.dart';
-
-/**
- * Uncomment this later
- * import 'package:firebase_auth/firebase_auth.dart';
- */
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileFragmentPresenter extends BasePresenter{
   static const REQUEST_LOGOUT = 1;
@@ -57,7 +53,6 @@ class ProfileFragmentPresenter extends BasePresenter{
   }
 
   void logout() async {
-    /** Uncomment this later
     state.shouldShowLoading(REQUEST_LOGOUT);
 
     await FirebaseAuth.instance.signOut();
@@ -65,7 +60,6 @@ class ProfileFragmentPresenter extends BasePresenter{
 
     state.shouldHideLoading(REQUEST_LOGOUT);
 
-    _delegate.onSuccessLogout();*/
-
+    _delegate.onSuccessLogout();
   }
 }
