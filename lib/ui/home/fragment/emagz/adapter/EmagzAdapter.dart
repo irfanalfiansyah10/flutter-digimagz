@@ -5,6 +5,7 @@ import 'package:digimagz/network/response/EmagzResponse.dart';
 import 'package:digimagz/provider/DownloadEbookProvider.dart';
 import 'package:digimagz/ui/home/fragment/emagz/adapter/EmagzAdapterPresenter.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
+import 'package:digimagz/utilities/ImageUtils.dart';
 import 'package:digimagz/utilities/UrlUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +72,16 @@ class _EmagzItemState extends BaseState<EmagzItem, EmagzAdapterPresenter> {
                 ),
                 baseColor: Colors.grey[300],
                 highlightColor: Colors.white,
+              ),
+              errorWidget: (_, __, ___) => Container(
+                width: double.infinity,
+                height: adaptiveWidth(context, 130),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(ImageUtils.mqdefault),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
             SizedBox(height: adaptiveWidth(context, 10)),

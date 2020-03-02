@@ -45,7 +45,6 @@ dependencies:
   path_provider:
   open_file:
   moor_flutter: 2.0.0
-  permission_handler: 4.1.0
   firebase_auth: 0.14.0+5
   firebase_core: 0.4.0+9
   firebase_messaging: 5.1.6
