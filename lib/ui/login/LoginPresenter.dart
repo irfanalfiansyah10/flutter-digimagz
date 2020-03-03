@@ -3,9 +3,9 @@ import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/network/response/UserResponse.dart';
 import 'package:digimagz/preferences/AppPreference.dart';
 import 'package:digimagz/ui/login/LoginDelegate.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPresenter extends BasePresenter{

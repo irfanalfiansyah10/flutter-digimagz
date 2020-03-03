@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digimagz/custom/view/text/StyledText.dart';
 import 'package:digimagz/extension/Size.dart';
 import 'package:digimagz/network/response/StoryResponse.dart';
+import 'package:digimagz/utilities/ImageUtils.dart';
 import 'package:digimagz/utilities/UrlUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,16 @@ class StoryItem extends StatelessWidget {
                 ),
                 baseColor: Colors.grey[300],
                 highlightColor: Colors.white,
+              ),
+              errorWidget: (_, __, ___) => Container(
+                width: adaptiveWidth(context, 150),
+                height: adaptiveWidth(context, 150),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(ImageUtils.mqdefault),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
           ),

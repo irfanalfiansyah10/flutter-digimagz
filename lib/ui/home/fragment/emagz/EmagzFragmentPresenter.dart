@@ -5,6 +5,7 @@ import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 
 class EmagzFragmentPresenter extends BasePresenter{
   static const REQUEST_GET_EMAGZ = 0;
+  static const REQUEST_DOWNLOAD_EBOOK = 1;
 
   EmagzFragmentPresenter(BaseState state) : super(state);
 

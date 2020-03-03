@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/network/response/BaseResponse.dart';
 import 'package:digimagz/provider/LikeProvider.dart';
+import 'package:digimagz/utilities/ImageUtils.dart';
 import 'package:mcnmr_common_ext/FutureDelayed.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:digimagz/extension/Size.dart';
@@ -98,6 +99,16 @@ class _NewsItemState extends BaseState<NewsItem, NewsAdapterPresenter> {
                     ),
                     baseColor: Colors.grey[300],
                     highlightColor: Colors.white
+                ),
+                errorWidget: (_, __, ___) => Container(
+                  width: adaptiveWidth(context, 130),
+                  height: adaptiveWidth(context, 130),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(ImageUtils.mqdefault),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
               SizedBox(width: 10),
