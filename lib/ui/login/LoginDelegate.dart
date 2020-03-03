@@ -1,3 +1,0 @@
-class LoginDelegate {
-  void onSuccessLogin(){}
-}

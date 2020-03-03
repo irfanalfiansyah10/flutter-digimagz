@@ -5,8 +5,6 @@ import 'package:digimagz/ui/detail/story/DetailStory.dart';
 import 'package:digimagz/ui/fill_personal_data/FillPersonalData.dart';
 import 'package:digimagz/ui/home/Home.dart';
 import 'package:digimagz/ui/list/news/ListNews.dart';
-import 'package:digimagz/ui/login/Login.dart';
-import 'package:digimagz/ui/login_email/LoginEmail.dart';
 import 'package:digimagz/ui/splash_screen/SplashScreen.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,10 +24,8 @@ class MyApp extends StatelessWidget {
   static const ROUTE_ROOT = "/";
   static const ROUTE_HOME = "/home";
   static const ROUTE_LIST_NEWS = "/listNews";
-  static const ROUTE_LOGIN = "/login";
   static const ROUTE_DETAIL_NEWS = "/detailNews";
   static const ROUTE_DETAIL_STORY = "/detailStory";
-  static const ROUTE_LOGIN_EMAIL = "/loginEmail";
   static const ROUTE_FILL_PERSONAL_DATA = "/fillPersonalData";
 
   @override
@@ -55,14 +51,10 @@ class MyApp extends StatelessWidget {
               return CupertinoPageRoute(builder: (ctx) => Home());
             case ROUTE_LIST_NEWS :
               return CupertinoPageRoute(builder: (ctx) => ListNews(settings.arguments));
-            case ROUTE_LOGIN :
-              return CupertinoPageRoute(builder: (ctx) => Login());
             case ROUTE_DETAIL_NEWS :
               return CupertinoPageRoute(builder: (ctx) => DetailNews(settings.arguments));
             case ROUTE_DETAIL_STORY :
               return CupertinoPageRoute(builder: (ctx) => DetailStory(settings.arguments));
-            case ROUTE_LOGIN_EMAIL :
-              return CupertinoPageRoute(builder: (ctx) => LoginEmail());
             case ROUTE_FILL_PERSONAL_DATA :
               return CupertinoPageRoute(builder: (ctx) => FillPersonalData());
             default :

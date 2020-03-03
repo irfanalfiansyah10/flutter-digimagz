@@ -1,12 +1,10 @@
 import 'dart:ui';
 
 import 'package:digimagz/ancestor/BaseState.dart';
-import 'package:digimagz/main.dart';
 import 'package:digimagz/preferences/AppPreference.dart';
 import 'package:digimagz/ui/home/HomePresenter.dart';
 import 'package:digimagz/ui/home/fragment/emagz/EmagzFragment.dart';
 import 'package:digimagz/ui/home/fragment/home/HomeFragment.dart';
-import 'package:digimagz/ui/home/fragment/profile/ProfileFragment.dart';
 import 'package:digimagz/ui/home/fragment/search/SearchFragment.dart';
 import 'package:digimagz/ui/home/fragment/video/VideoFragment.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
@@ -24,7 +22,6 @@ class _HomeState extends BaseState<Home, HomePresenter> {
     VideoFragment(),
     SearchFragment(),
     EmagzFragment(),
-    ProfileFragment(),
   ];
 
   int _currentPosition = 0;
@@ -38,14 +35,6 @@ class _HomeState extends BaseState<Home, HomePresenter> {
     var user = await AppPreference.getUser();
     if(user != null){
       setState(() => _alreadySignIn = true);
-    }
-  }
-
-  @override
-  void onNavigationResult(String from, result) {
-    if(from == MyApp.ROUTE_FILL_PERSONAL_DATA && result){
-      (_content[4] as ProfileFragment).reload();
-      setState(() => _currentPosition = 4);
     }
   }
 
@@ -90,28 +79,11 @@ class _HomeState extends BaseState<Home, HomePresenter> {
   }
 
   void _onBottomBarTapped(int newPosition) async {
-
-    if(newPosition == 1){
+    if (newPosition == 1) {
       (_content[newPosition] as VideoFragment).visit();
-    }else if(newPosition == 2){
+    } else if (newPosition == 2) {
       (_content[newPosition] as SearchFragment).visit();
-    }else if(newPosition == 4){
-      var user = await AppPreference.getUser();
-
-      if(user == null){
-        navigateTo(MyApp.ROUTE_LOGIN);
-        return;
-      }else {
-        if(user.gender == "-" || user.dateBirth == "-"){
-          navigateTo(MyApp.ROUTE_FILL_PERSONAL_DATA);
-          return;
-        }else {
-          (_content[newPosition] as ProfileFragment).reload();
-        }
-      }
     }
-
-    setState(() => _currentPosition = newPosition);
   }
 }
 
