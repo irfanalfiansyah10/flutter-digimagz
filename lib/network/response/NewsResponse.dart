@@ -40,6 +40,7 @@ class News {
   String nameCategory;
   String titleNews;
   String contentNews;
+  String contentNewsIos;
   String viewsCount;
   String sharesCount;
   String dateNews;
@@ -57,6 +58,7 @@ class News {
     nameCategory = obtainValue(json["NAME_CATEGORY"], "");
     titleNews = obtainValue(json["TITLE_NEWS"], "");
     contentNews = obtainValue(json["CONTENT_NEWS"], "");
+    contentNewsIos = obtainValue(json["CONTENT_NEWS_IOS"], "");
     viewsCount = obtainValue(json["VIEWS_COUNT"], "");
     sharesCount = obtainValue(json["SHARES_COUNT"], "");
     dateNews = obtainValue(json["DATE_NEWS"], "");

@@ -206,14 +206,13 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
 
                       Icon(Icons.access_time, color: ColorUtils.primary),
                       SizedBox(width: 5),
-                      Text(DateFormat("dd MMM yyyy").format(DateFormat("yyyy-MM-dd HH:mm:ss")
-                          .parse(widget.news.dateNews)),
+                      Text(DateFormat("dd MMM yyyy").format(DateFormat("yyyy-MM-dd HH:mm:ss").parse(widget.news.dateNews)),
                         textScaleFactor: 1.0,
                         style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey
+                          fontSize: 12,
+                          color: Colors.grey,
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -241,9 +240,11 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
                 SizedBox(height: 20),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: HtmlWidget(
-                    widget.news.contentNews,
-                    webView: true,
+                  child: Text(widget.news.contentNewsIos,
+                    textScaleFactor: 1.0,
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
                   ),
                 ),
                 SizedBox(height: 10),
