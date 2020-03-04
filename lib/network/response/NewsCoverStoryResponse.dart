@@ -17,6 +17,7 @@ class NewsCoverStory {
   String idNews;
   String nameCategory;
   String contentNews;
+  String contentNewsIos;
   String titleNews;
   String dateNews;
   List<String> newsImage;
@@ -26,11 +27,15 @@ class NewsCoverStory {
   String sharesCount;
   String idCoverStory;
   String titleCoverStory;
+  String editor;
+  String verificator;
+  String status;
 
   NewsCoverStory.fromJson(Map<String, dynamic> json){
     idNews = obtainValue(json["ID_NEWS"], "");
     nameCategory = obtainValue(json["NAME_CATEGORY"], "");
     contentNews = obtainValue(json["CONTENT_NEWS"], "");
+    contentNewsIos = obtainValue(json["CONTENT_NEWS_IOS"], "");
     titleNews = obtainValue(json["TITLE_NEWS"], "");
     dateNews = obtainValue(json["DATE_NEWS"], "");
     viewsCount = obtainValue(json["VIEWS_COUNT"], "");
@@ -39,6 +44,9 @@ class NewsCoverStory {
     sharesCount = obtainValue(json["SHARES_COUNT"], "");
     idCoverStory = obtainValue(json["ID_COVERSTORY"], "");
     titleCoverStory = obtainValue(json["TITLE_COVERSTORY"], "");
+    editor = obtainValue(json["EDITOR"], "");
+    verificator = obtainValue(json["VERIFICATOR"], "");
+    status = obtainValue(json["STATUS"], "");
 
     newsImage = List();
     if(json["NEWS_IMAGE"] != null){

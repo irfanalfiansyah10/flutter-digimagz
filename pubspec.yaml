@@ -34,7 +34,6 @@ dependencies:
   flutter_svg:
   url_launcher:
   flutter_youtube:
-  flutter_widget_from_html:
   mcnmr_request_wrapper: 0.0.4
   mcnmr_common_ext:
   mcnmr_wrap_height_gridview:

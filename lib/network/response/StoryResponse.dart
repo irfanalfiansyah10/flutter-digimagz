@@ -17,6 +17,7 @@ class Story {
   String idCoverStory;
   String titleCoverStory;
   String summary;
+  String summaryIos;
   String imageCoverStory;
   String dateCoverStory;
 
@@ -24,6 +25,7 @@ class Story {
     idCoverStory = obtainValue(json["ID_COVERSTORY"], "");
     titleCoverStory = obtainValue(json["TITLE_COVERSTORY"], "");
     summary = obtainValue(json["SUMMARY"], "");
+    summaryIos = obtainValue(json["SUMMARY_IOS"], "");
     imageCoverStory = obtainValue(json["IMAGE_COVERSTORY"], "");
     dateCoverStory = obtainValue(json["DATE_COVERSTORY"], "");
   }

@@ -23,12 +23,16 @@ class NewsResponse extends BaseResponse{
       news.nameCategory = i.nameCategory;
       news.titleNews = i.titleNews;
       news.contentNews = i.contentNews;
+      news.contentNewsIos = i.contentNewsIos;
       news.viewsCount = i.viewsCount;
       news.sharesCount = i.sharesCount;
       news.dateNews = i.dateNews;
       news.likes = i.likes;
       news.comments = i.comments;
       news.newsImage = i.newsImage;
+      news.editor = i.editor;
+      news.verificator = i.verificator;
+      news.status = i.status;
 
       data.add(news);
     }

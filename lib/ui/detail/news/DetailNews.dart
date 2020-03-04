@@ -16,7 +16,6 @@ import 'package:digimagz/ui/detail/news/adapter/ImageNewsAdapter.dart';
 import 'package:digimagz/ui/home/fragment/home/adapter/news/NewsAdapter.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:intl/intl.dart';
 import 'package:mcnmr_common_ext/FutureDelayed.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
@@ -54,8 +53,8 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
     presenter.executeGetRelatedNews(widget.news.idNews, _relatedNewsWrapper);
     presenter.executeGetComment(widget.news.idNews, _commentWrapper);
 
-    _automaticSlider = Timer.periodic(Duration(seconds: 5), (_){
-      if(_currentSliderPosition == widget.news.newsImage.length - 1){
+    _automaticSlider = Timer.periodic(Duration(seconds: 5), (_) {
+      if (_currentSliderPosition == widget.news.newsImage.length - 1) {
         setState(() => _currentSliderPosition = 0);
         _sliderController.animateToPage(_currentSliderPosition,
             duration: Duration(milliseconds: 300),
@@ -218,15 +217,15 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
                 ),
                 SizedBox(height: 10),
                 Container(
-                  height: adaptiveWidth(context, 230),
-                  width: double.infinity,
-                  child: PageView(
-                    controller: _sliderController,
-                    onPageChanged: (i) => setState(() => _currentSliderPosition = i),
-                    children: widget.news.newsImage.asMap()
-                        .map((index, element) => MapEntry(index, ImageNewsItem(news: widget.news, position: index)))
-                        .values.toList(),
-                  )
+                    height: adaptiveWidth(context, 230),
+                    width: double.infinity,
+                    child: PageView(
+                      controller: _sliderController,
+                      onPageChanged: (i) => setState(() => _currentSliderPosition = i),
+                      children: widget.news.newsImage.asMap()
+                          .map((index, element) => MapEntry(index, ImageNewsItem(news: widget.news, position: index)))
+                          .values.toList(),
+                    )
                 ),
                 SizedBox(height: 10),
                 Row(
@@ -235,7 +234,7 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
                       .map((index, element) => MapEntry(
                       index,
                       PageIndicator(_currentSliderPosition == index,
-                      activeColor: ColorUtils.primary))).values.toList(),
+                          activeColor: ColorUtils.primary))).values.toList(),
                 ),
                 SizedBox(height: 20),
                 Padding(
@@ -333,12 +332,12 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
                         SizedBox(width: 50),
 
                         IconButton(icon: Icon(Icons.share, color: ColorUtils.primary),
-                          onPressed: () async {
-                            await Share.share("Check out My Apps here");
-                            if(isUserLoggedIn){
-                              presenter.executePostShare(widget.news.idNews);
+                            onPressed: () async {
+                              await Share.share("Check out My Apps here");
+                              if(isUserLoggedIn){
+                                presenter.executePostShare(widget.news.idNews);
+                              }
                             }
-                          }
                         ),
                         SizedBox(width: 5),
                         Text("Share this post",

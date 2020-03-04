@@ -14,7 +14,6 @@ import 'package:digimagz/ui/detail/story/DetailStoryPresenter.dart';
 import 'package:digimagz/ui/home/fragment/home/adapter/news/NewsAdapter.dart';
 import 'package:digimagz/utilities/UrlUtils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:shimmer/shimmer.dart';
 
 class DetailStory extends StatefulWidget {
@@ -86,11 +85,11 @@ class _DetailStoryState extends BaseState<DetailStory, DetailStoryPresenter>
         title: Image.asset("assets/images/logo_toolbar.png"),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          color: Colors.black,
-          onPressed: (){
-            finish();
-          }
+            icon: Icon(Icons.arrow_back_ios),
+            color: Colors.black,
+            onPressed: (){
+              finish();
+            }
         ),
       ),
       body: SafeArea(
@@ -130,7 +129,15 @@ class _DetailStoryState extends BaseState<DetailStory, DetailStoryPresenter>
                   ),
                 ),
               ),
-              HtmlWidget(widget.story.summary),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(widget.story.summaryIos,
+                  textScaleFactor: 1.0,
+                  style: TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
+              ),
               Container(
                 margin: EdgeInsets.all(10),
                 child: RequestWrapperWidget<NewsResponse>(
