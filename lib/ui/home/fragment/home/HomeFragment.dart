@@ -145,7 +145,7 @@ class _HomeFragmentState extends BaseState<HomeFragment, HomeFragmentPresenter>
               height: adaptiveWidth(context, 230),
               child: RequestWrapperWidget(
                 requestWrapper: _sliderWrapper,
-                placeholder: ClipRRect(
+                placeholder: (_) => ClipRRect(
                   child: Shimmer.fromColors(
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 16),
@@ -204,7 +204,7 @@ class _HomeFragmentState extends BaseState<HomeFragment, HomeFragmentPresenter>
               padding: EdgeInsets.symmetric(horizontal: 13),
               child: RequestWrapperWidget(
                   requestWrapper: _trendingWrapper,
-                  placeholder: ListView.builder(
+                  placeholder: (_) => ListView.builder(
                     itemCount: 2,
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -260,7 +260,7 @@ class _HomeFragmentState extends BaseState<HomeFragment, HomeFragmentPresenter>
               height: adaptiveWidth(context, 200),
               child: RequestWrapperWidget(
                 requestWrapper: _storyWrapper,
-                placeholder: ListView.builder(
+                placeholder: (_) => ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: 5,
                   shrinkWrap: true,
@@ -289,7 +289,7 @@ class _HomeFragmentState extends BaseState<HomeFragment, HomeFragmentPresenter>
               padding: EdgeInsets.symmetric(horizontal: 13),
               child: RequestWrapperWidget(
                   requestWrapper: _newsWrapper,
-                  placeholder: ListView.builder(
+                  placeholder: (_) => ListView.builder(
                     itemCount: 2,
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,

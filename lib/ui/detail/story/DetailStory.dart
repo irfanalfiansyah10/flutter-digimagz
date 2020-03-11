@@ -142,7 +142,7 @@ class _DetailStoryState extends BaseState<DetailStory, DetailStoryPresenter>
                 margin: EdgeInsets.all(10),
                 child: RequestWrapperWidget<NewsResponse>(
                   requestWrapper: _relatedNewsWrapper,
-                  placeholder: Shimmer.fromColors(
+                  placeholder: (_) => Shimmer.fromColors(
                     child: Container(
                       color: Colors.grey[300],
                       height: adaptiveWidth(context, 16),
@@ -159,7 +159,7 @@ class _DetailStoryState extends BaseState<DetailStory, DetailStoryPresenter>
               ),
               RequestWrapperWidget<NewsResponse>(
                 requestWrapper: _relatedNewsWrapper,
-                placeholder: ListView.builder(
+                placeholder: (_) => ListView.builder(
                   itemCount: 5,
                   shrinkWrap: true,
                   padding: EdgeInsets.symmetric(horizontal: 10),

@@ -144,7 +144,7 @@ class _SearchFragmentState extends BaseState<SearchFragment, SearchFragmentPrese
                     ),
                     RequestWrapperWidget(
                       requestWrapper: _wrapper,
-                      placeholder: ListView.builder(
+                      placeholder: (_) => ListView.builder(
                         itemCount: 5,
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,

@@ -53,7 +53,7 @@ class _EmagzFragmentState extends BaseState<EmagzFragment, EmagzFragmentPresente
       },
       child: RequestWrapperWidget<EmagzResponse>(
         requestWrapper: _emagzWrapper,
-        placeholder: WrapGrid(
+        placeholder: (_) => WrapGrid(
           isScrollable: true,
           rowAxisCount: 2,
           itemCount: 6,

@@ -113,7 +113,7 @@ class _ProfileFragmentState extends BaseState<ProfileFragment, ProfileFragmentPr
               children: <Widget>[
                 RequestWrapperWidget<User>(
                   requestWrapper: _userWrapper,
-                  placeholder: Shimmer.fromColors(
+                  placeholder: (_) => Shimmer.fromColors(
                     child: Container(
                       width: adaptiveWidth(context, 120),
                       height: adaptiveWidth(context, 120),
@@ -235,7 +235,7 @@ class _ProfileFragmentState extends BaseState<ProfileFragment, ProfileFragmentPr
                     )),
                     SizedBox(height: adaptiveWidth(context, 5)),
                     RequestWrapperWidget<User>(requestWrapper: _userWrapper,
-                      placeholder: Text("", textScaleFactor: 1.0, style: TextStyle(
+                      placeholder: (_) => Text("", textScaleFactor: 1.0, style: TextStyle(
                           color: Colors.black,
                           fontSize: 12
                       )),
@@ -269,7 +269,7 @@ class _ProfileFragmentState extends BaseState<ProfileFragment, ProfileFragmentPr
                     )),
                     SizedBox(height: adaptiveWidth(context, 5)),
                     RequestWrapperWidget<User>(requestWrapper: _userWrapper,
-                      placeholder: Text("", textScaleFactor: 1.0, style: TextStyle(
+                      placeholder: (_) => Text("", textScaleFactor: 1.0, style: TextStyle(
                         color: Colors.black,
                         fontSize: 12,
                       )),
@@ -303,7 +303,7 @@ class _ProfileFragmentState extends BaseState<ProfileFragment, ProfileFragmentPr
                     )),
                     SizedBox(height: adaptiveWidth(context, 5)),
                     RequestWrapperWidget<User>(requestWrapper: _userWrapper,
-                      placeholder: Text("", textScaleFactor: 1.0, style: TextStyle(
+                      placeholder: (_) => Text("", textScaleFactor: 1.0, style: TextStyle(
                         color: Colors.black,
                         fontSize: 12,
                       )),
@@ -337,7 +337,7 @@ class _ProfileFragmentState extends BaseState<ProfileFragment, ProfileFragmentPr
                     )),
                     SizedBox(height: adaptiveWidth(context, 5)),
                     RequestWrapperWidget<User>(requestWrapper: _userWrapper,
-                      placeholder: Text("", textScaleFactor: 1.0, style: TextStyle(
+                      placeholder: (_) => Text("", textScaleFactor: 1.0, style: TextStyle(
                         color: Colors.black,
                         fontSize: 12,
                       )),
@@ -371,7 +371,7 @@ class _ProfileFragmentState extends BaseState<ProfileFragment, ProfileFragmentPr
                     )),
                     SizedBox(height: adaptiveWidth(context, 5)),
                     RequestWrapperWidget<User>(requestWrapper: _userWrapper,
-                      placeholder: Text("", textScaleFactor: 1.0, style: TextStyle(
+                      placeholder: (_) => Text("", textScaleFactor: 1.0, style: TextStyle(
                         color: Colors.black,
                         fontSize: 12,
                       )),

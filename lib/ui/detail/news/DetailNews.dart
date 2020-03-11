@@ -49,23 +49,27 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
   DetailNewsPresenter initPresenter() => DetailNewsPresenter(this, this);
 
   @override
+  void initState() {
+    super.initState();
+    /**_automaticSlider = Timer.periodic(Duration(seconds: 5), (_) {
+        if (_currentSliderPosition == widget.news.newsImage.length - 1) {
+        setState(() => _currentSliderPosition = 0);
+        _sliderController.animateToPage(_currentSliderPosition,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut);
+        return;
+        }
+        setState(() => _currentSliderPosition++);
+        _sliderController.animateToPage(_currentSliderPosition,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut);
+        });*/
+  }
+
+  @override
   void afterWidgetBuilt() async {
     presenter.executeGetRelatedNews(widget.news.idNews, _relatedNewsWrapper);
     presenter.executeGetComment(widget.news.idNews, _commentWrapper);
-
-    _automaticSlider = Timer.periodic(Duration(seconds: 5), (_) {
-      if (_currentSliderPosition == widget.news.newsImage.length - 1) {
-        setState(() => _currentSliderPosition = 0);
-        _sliderController.animateToPage(_currentSliderPosition,
-            duration: Duration(milliseconds: 300),
-            curve: Curves.easeInOut);
-        return;
-      }
-      setState(() => _currentSliderPosition++);
-      _sliderController.animateToPage(_currentSliderPosition,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeInOut);
-    });
 
     user = await AppPreference.getUser();
 
@@ -381,16 +385,15 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
                 SizedBox(height: 20),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: RequestWrapperWidget(
+                  child: RequestWrapperWidget<CommentResponse>(
                     requestWrapper: _commentWrapper,
-                    placeholder: ListView.builder(
+                    placeholder: (_) => ListView.builder(
                       itemCount: 2,
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (ctx, position) => ShimmerCommentItem(),
                     ),
-                    builder: (ctx, response) {
-                      var data = response as CommentResponse;
+                    builder: (ctx, data) {
                       return ListView.builder(
                         itemCount: data.data.length,
                         physics: NeverScrollableScrollPhysics(),
@@ -414,16 +417,15 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
                 SizedBox(height: 20),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: RequestWrapperWidget(
+                  child: RequestWrapperWidget<NewsResponse>(
                     requestWrapper: _relatedNewsWrapper,
-                    placeholder: ListView.builder(
+                    placeholder: (_) => ListView.builder(
                       itemCount: 2,
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (ctx, position) => ShimmerNewsItem(),
                     ),
-                    builder: (ctx, response){
-                      var data = response as NewsResponse;
+                    builder: (ctx, data){
                       return ListView.builder(
                         itemCount: data.data.length,
                         physics: NeverScrollableScrollPhysics(),
@@ -483,7 +485,7 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
 
   @override
   void dispose() {
-    _automaticSlider.cancel();
+    _automaticSlider?.cancel();
     super.dispose();
   }
 }

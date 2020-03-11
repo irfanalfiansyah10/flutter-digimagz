@@ -95,7 +95,7 @@ class DetailNewsPresenter extends BasePresenter{
       "comments" : comment
     };
 
-    var result = repository.postComment(REQUEST_POST_COMMENT, params);
+    var result = await repository.postComment(REQUEST_POST_COMMENT, params);
 
     if(result != null){
       state.alert(title: "Terima Kasih",
