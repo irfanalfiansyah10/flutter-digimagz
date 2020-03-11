@@ -35,7 +35,7 @@ dependencies:
   url_launcher:
   flutter_youtube:
   flutter_widget_from_html:
-  mcnmr_request_wrapper: 0.0.4
+  mcnmr_request_wrapper: 0.0.6
   mcnmr_common_ext:
   mcnmr_wrap_height_gridview:
   pull_to_refresh:

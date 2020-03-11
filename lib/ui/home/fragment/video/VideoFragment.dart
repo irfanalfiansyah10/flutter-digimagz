@@ -83,7 +83,7 @@ class _VideoFragmentState extends BaseState<VideoFragment, VideoFragmentPresente
       backgroundColor: Colors.white,
       child: RequestWrapperWidget(
         requestWrapper: _youtubeWrapper,
-        placeholder: ListView.builder(
+        placeholder:(_) => ListView.builder(
           itemCount: 5,
           shrinkWrap: true,
           itemBuilder: (ctx, position) => ShimmerVideoItem(),

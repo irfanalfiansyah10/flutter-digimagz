@@ -130,12 +130,20 @@ class _DetailStoryState extends BaseState<DetailStory, DetailStoryPresenter>
                   ),
                 ),
               ),
-              HtmlWidget(widget.story.summary),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(widget.story.summaryIos,
+                  textScaleFactor: 1.0,
+                  style: TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
+              ),
               Container(
                 margin: EdgeInsets.all(10),
                 child: RequestWrapperWidget<NewsResponse>(
                   requestWrapper: _relatedNewsWrapper,
-                  placeholder: Shimmer.fromColors(
+                  placeholder: (_) => Shimmer.fromColors(
                     child: Container(
                       color: Colors.grey[300],
                       height: adaptiveWidth(context, 16),
@@ -152,7 +160,7 @@ class _DetailStoryState extends BaseState<DetailStory, DetailStoryPresenter>
               ),
               RequestWrapperWidget<NewsResponse>(
                 requestWrapper: _relatedNewsWrapper,
-                placeholder: ListView.builder(
+                placeholder:(_) => ListView.builder(
                   itemCount: 5,
                   shrinkWrap: true,
                   padding: EdgeInsets.symmetric(horizontal: 10),

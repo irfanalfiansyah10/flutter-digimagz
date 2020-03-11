@@ -81,7 +81,7 @@ class _ListNewsState extends BaseState<ListNews, ListNewsPresenter> implements L
       ),
       body: RequestWrapperWidget<NewsResponse>(
         requestWrapper: _wrapper,
-        placeholder: ListView.builder(
+        placeholder:(_) => ListView.builder(
           itemCount: 5,
           padding: EdgeInsets.all(15),
           physics: NeverScrollableScrollPhysics(),
