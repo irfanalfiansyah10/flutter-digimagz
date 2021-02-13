@@ -43,7 +43,7 @@ class LoginPresenter extends BasePresenter{
           break;
         case FacebookLoginStatus.error :
           Fluttertoast.showToast(msg: "Error");
-          Fluttertoast.showToast(msg: signIn.errorMessage, timeInSecForIos: 10);
+          Fluttertoast.showToast(msg: signIn.errorMessage);
           break;
         case FacebookLoginStatus.cancelledByUser :
           Fluttertoast.showToast(msg: "Cancelled");

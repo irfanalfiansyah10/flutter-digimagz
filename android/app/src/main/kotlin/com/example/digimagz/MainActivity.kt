@@ -1,6 +1,7 @@
 package com.example.digimagz
 
 import android.os.Bundle
+import com.facebook.FacebookSdk
 
 import io.flutter.app.FlutterActivity
 import io.flutter.plugins.GeneratedPluginRegistrant

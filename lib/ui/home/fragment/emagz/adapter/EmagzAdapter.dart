@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/custom/view/text/StyledText.dart';
+import 'package:digimagz/main.dart';
 import 'package:digimagz/network/response/EmagzResponse.dart';
 import 'package:digimagz/provider/DownloadEbookProvider.dart';
 import 'package:digimagz/ui/home/fragment/emagz/adapter/EmagzAdapterPresenter.dart';
@@ -183,6 +184,42 @@ class _EmagzItemState extends BaseState<EmagzItem, EmagzAdapterPresenter> {
                 );
               }
             ),
+            MaterialButton(
+              onPressed: (){
+                navigateTo(MyApp.ROUTE_WEBVIEW, arguments: "https://github.com/");
+              },
+              color: ColorUtils.primary,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Icon(Icons.chrome_reader_mode, color: Colors.white),
+                  SizedBox(width: adaptiveWidth(context, 10)),
+                  StyledText("Baca",
+                    size: adaptiveWidth(context, 14),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ],
+              ),
+            ),
+            MaterialButton(
+              onPressed: (){
+                navigateTo(MyApp.ROUTE_WEBVIEW, arguments: "https://www.google.com/");
+              },
+              color: ColorUtils.primary,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Icon(Icons.question_answer, color: Colors.white),
+                  SizedBox(width: adaptiveWidth(context, 10)),
+                  StyledText("Quiz",
+                    size: adaptiveWidth(context, 14),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ],
+              ),
+            )
           ]
         ),
       ),
