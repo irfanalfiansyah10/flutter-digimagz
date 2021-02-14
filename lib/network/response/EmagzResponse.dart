@@ -18,6 +18,8 @@ class EmagzData{
   String file;
   String dateUploaded;
   String name;
+  String linkPubHtml5;
+  String linkQuiz;
 
   EmagzData.fromJson(Map<String, dynamic> json){
     idEmagz = obtainValue(json["ID_EMAGZ"], "");
@@ -25,5 +27,7 @@ class EmagzData{
     file = obtainValue(json["FILE"], "");
     dateUploaded = obtainValue(json["DATE_UPLOADED"], "");
     name = obtainValue(json["NAME"], "");
+    linkPubHtml5 = obtainValue(json["LINK_PUBHTML5"], "");
+    linkQuiz = obtainValue(json["LINK_QUIZ"], "");
   }
 }

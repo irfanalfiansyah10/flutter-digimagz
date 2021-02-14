@@ -10,6 +10,7 @@ import 'package:digimagz/utilities/ImageUtils.dart';
 import 'package:digimagz/utilities/UrlUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:digimagz/extension/Size.dart';
@@ -52,6 +53,7 @@ class _EmagzItemState extends BaseState<EmagzItem, EmagzAdapterPresenter> {
         padding: EdgeInsets.all(adaptiveWidth(context, 12)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             CachedNetworkImage(
               imageUrl: UrlUtils.URL_IMAGE_EMAGZ + widget.data.thumbnail,
@@ -186,7 +188,30 @@ class _EmagzItemState extends BaseState<EmagzItem, EmagzAdapterPresenter> {
             ),
             MaterialButton(
               onPressed: (){
-                navigateTo(MyApp.ROUTE_WEBVIEW, arguments: "https://github.com/");
+                if(widget.data.linkPubHtml5.isNotEmpty) {
+                  navigateTo(MyApp.ROUTE_WEBVIEW, arguments: widget.data.linkPubHtml5);
+                } else {
+                  showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext c) => AlertDialog(
+                        title: Text("Pesan", style: TextStyle(fontSize: 20, color: Colors.black)),
+                        content: Text("Mohon hubungi administrator untuk melakukan pengecekan data pada menu ini.", style: TextStyle(fontSize: 16, color: Color(0x8a000000))),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text("OK"),
+                            onPressed: () {
+                              if (Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              } else {
+                                SystemNavigator.pop();
+                              }
+                            },
+                          )
+                        ],
+                      )
+                  );
+                }
               },
               color: ColorUtils.primary,
               child: Row(
@@ -204,7 +229,30 @@ class _EmagzItemState extends BaseState<EmagzItem, EmagzAdapterPresenter> {
             ),
             MaterialButton(
               onPressed: (){
-                navigateTo(MyApp.ROUTE_WEBVIEW, arguments: "https://www.google.com/");
+                if(widget.data.linkQuiz.isNotEmpty) {
+                  navigateTo(MyApp.ROUTE_WEBVIEW, arguments: widget.data.linkQuiz);
+                } else {
+                  showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext c) => AlertDialog(
+                        title: Text("Pesan", style: TextStyle(fontSize: 20, color: Colors.black)),
+                        content: Text("Mohon hubungi administrator untuk melakukan pengecekan data pada menu ini.", style: TextStyle(fontSize: 16, color: Color(0x8a000000))),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text("OK"),
+                            onPressed: () {
+                              if (Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              } else {
+                                SystemNavigator.pop();
+                              }
+                            },
+                          )
+                        ],
+                      )
+                  );
+                }
               },
               color: ColorUtils.primary,
               child: Row(
