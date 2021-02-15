@@ -194,6 +194,68 @@ class _HomeFragmentState extends BaseState<HomeFragment, HomeFragmentPresenter>
             ),
             Container(
               margin: EdgeInsets.all(15),
+              child: Text("Berita",
+                  textScaleFactor: 1.0,
+                  style: TextStyle(
+                      fontSize: 22
+                  )),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 13),
+              child: RequestWrapperWidget(
+                  requestWrapper: _newsWrapper,
+                  placeholder: (_) => ListView.builder(
+                    itemCount: 2,
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (ctx, position) => ShimmerNewsItem(),
+                  ),
+                  builder: (ctx, response){
+                    var data = response as NewsResponse;
+                    return ListView.builder(
+                      itemCount: data.data.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (ctx, position) => NewsItem(data.data[position], onNewsSelected),
+                    );
+                  }),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Container(
+              margin: EdgeInsets.all(15),
+              child: Text("Cover Story",
+                  textScaleFactor: 1.0,
+                  style: TextStyle(
+                      fontSize: 22
+                  )),
+            ),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.only(left: 10),
+              height: adaptiveWidth(context, 200),
+              child: RequestWrapperWidget(
+                requestWrapper: _storyWrapper,
+                placeholder: (_) => ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  shrinkWrap: true,
+                  itemBuilder: (ctx, position) => ShimmerStoryItem(),
+                ),
+                builder: (ctx, response){
+                  var data = response as StoryResponse;
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: data.data.length,
+                    shrinkWrap: true,
+                    itemBuilder: (ctx, position) => StoryItem(data.data[position], onStorySelected),
+                  );
+                },
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.all(15),
               child: Text("Trending",
                   textScaleFactor: 1.0,
                   style: TextStyle(
@@ -245,68 +307,6 @@ class _HomeFragmentState extends BaseState<HomeFragment, HomeFragmentPresenter>
                       arguments: ListNewsArgument(isFavorit: true));
                 },
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(15),
-              child: Text("Cover Story",
-                  textScaleFactor: 1.0,
-                  style: TextStyle(
-                      fontSize: 22
-                  )),
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.only(left: 10),
-              height: adaptiveWidth(context, 200),
-              child: RequestWrapperWidget(
-                requestWrapper: _storyWrapper,
-                placeholder: (_) => ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5,
-                  shrinkWrap: true,
-                  itemBuilder: (ctx, position) => ShimmerStoryItem(),
-                ),
-                builder: (ctx, response){
-                  var data = response as StoryResponse;
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: data.data.length,
-                    shrinkWrap: true,
-                    itemBuilder: (ctx, position) => StoryItem(data.data[position], onStorySelected),
-                  );
-                },
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.all(15),
-              child: Text("Berita",
-                  textScaleFactor: 1.0,
-                  style: TextStyle(
-                      fontSize: 22
-                  )),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 13),
-              child: RequestWrapperWidget(
-                  requestWrapper: _newsWrapper,
-                  placeholder: (_) => ListView.builder(
-                    itemCount: 2,
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (ctx, position) => ShimmerNewsItem(),
-                  ),
-                  builder: (ctx, response){
-                    var data = response as NewsResponse;
-                    return ListView.builder(
-                      itemCount: data.data.length,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (ctx, position) => NewsItem(data.data[position], onNewsSelected),
-                    );
-                  }),
-            ),
-            SizedBox(
-              height: 30,
             ),
           ],
         ),
