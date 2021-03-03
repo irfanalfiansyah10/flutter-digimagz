@@ -9,12 +9,12 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPresenter extends BasePresenter{
-  static const REQUEST_LOGIN = 0;
+  static const REQUEST_POST_USER = 0;
+  static const REQUEST_GET_USER = 1;
 
   final LoginDelegate _delegate;
 
   LoginPresenter(BaseState state, this._delegate) : super(state);
-
 
   void executeSignInGoogle() async {
     try{
@@ -27,7 +27,7 @@ class LoginPresenter extends BasePresenter{
 
       var user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
 
-      _executePostUserToApi(user.email, user.displayName, user.photoUrl);
+      _checkUser(user.email, user.displayName, user.photoUrl);
     }on Exception catch(e){
       Fluttertoast.showToast(msg: e.toString());
     }
@@ -54,32 +54,39 @@ class LoginPresenter extends BasePresenter{
 
       var user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
 
-      _executePostUserToApi(user.email, user.displayName, user.photoUrl);
+      _checkUser(user.email, user.displayName, user.photoUrl);
     }on Exception catch(e){
       Fluttertoast.showToast(msg: e.toString());
     }
   }
 
-  void _executePostUserToApi(String email, String name, String picUrl) async {
-    var params = {
+  void _checkUser(String email, String name, String picUrl) async {
+    var getUserParams = {"email" : email};
+    var result = await repository.getUser(REQUEST_GET_USER, getUserParams);
+
+    if(result != null){
+      if(result.data.length > 0) {
+        if(result.data[0].email == email) {
+          await AppPreference.saveUser(result.data[0]);
+          _delegate.onSuccessLogin();
+          return;
+        }
+      }
+    }
+
+    var postUserParams = {
       "email" : email,
       "name" : name,
       "pic_url" : picUrl
     };
 
-    var user = await repository.postUser(REQUEST_LOGIN, params);
+    await repository.postUser(REQUEST_POST_USER, postUserParams);
+    var newUser = User()
+      ..email = email
+      ..userName = name
+      ..urlPic = picUrl;
 
-    if(user == null){
-      var alreadySavedUser = User();
-      alreadySavedUser.email = email;
-      alreadySavedUser.userName = name;
-      alreadySavedUser.urlPic = picUrl;
-
-      await AppPreference.saveUser(alreadySavedUser);
-      _delegate.onSuccessLogin();
-    }else {
-      await AppPreference.saveUser(user);
-      _delegate.onSuccessLogin();
-    }
+    await AppPreference.saveUser(newUser);
+    _delegate.onSuccessLogin();
   }
 }

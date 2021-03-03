@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
-import 'package:digimagz/network/response/BaseResponse.dart';
 import 'package:digimagz/provider/LikeProvider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mcnmr_common_ext/FutureDelayed.dart';
@@ -18,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ProfileFragment extends StatefulWidget {
 
@@ -89,7 +89,7 @@ class _ProfileFragmentState extends BaseState<ProfileFragment, ProfileFragmentPr
   }
 
   @override
-  void onSuccessChangeAvatar(BaseResponse response) {
+  void onSuccessChangeAvatar() {
     reload();
   }
 
@@ -189,15 +189,20 @@ class _ProfileFragmentState extends BaseState<ProfileFragment, ProfileFragmentPr
                         ),
                       );
 
-                      File image;
+                      PickedFile image;
                       if(result == OPEN_GALLERY){
-                        image = await ImagePicker.pickImage(source: ImageSource.gallery);
+                        image = await ImagePicker().getImage(source: ImageSource.gallery);
                       }else if(result == OPEN_CAMERA){
-                        image = await ImagePicker.pickImage(source: ImageSource.camera);
+                        image = await ImagePicker().getImage(source: ImageSource.camera);
                       }
 
                       if(image != null){
-                        presenter.executeChangeAvatar(image);
+                        var file = File(image.path);
+                        if(file.lengthSync() > 1024 * 1024){
+                          Fluttertoast.showToast(msg: "Max ukuran file 1MB");
+                        }else {
+                          presenter.executeChangeAvatar(file);
+                        }
                       }
                     },
                     child: Container(
@@ -411,3 +416,4 @@ class _ProfileFragmentState extends BaseState<ProfileFragment, ProfileFragmentPr
     presenter.getAccountFromAPI(_userWrapper);
   }
 }
+

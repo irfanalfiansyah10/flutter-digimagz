@@ -97,11 +97,11 @@ class _HomeState extends BaseState<Home, HomePresenter> {
       (_content[newPosition] as SearchFragment).visit();
     }else if(newPosition == 4){
       var user = await AppPreference.getUser();
-
       if(user == null){
         navigateTo(MyApp.ROUTE_LOGIN);
         return;
       }else {
+        print("local : ${user.toJson()}");
         if(user.gender == "-" || user.dateBirth == "-"){
           navigateTo(MyApp.ROUTE_FILL_PERSONAL_DATA);
           return;

@@ -21,6 +21,8 @@ class FillPersonalDataPresenter extends BasePresenter {
       "gender" : gender
     };
 
+    print(params);
+
     var result = await repository.putUser(REQUEST_UPDATE_PROFILE, params);
 
     if(result != null){

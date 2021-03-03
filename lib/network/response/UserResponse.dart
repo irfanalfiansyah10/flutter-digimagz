@@ -15,13 +15,13 @@ class UserResponse extends BaseResponse {
 }
 
 class User{
-  String email;
-  String userName;
-  String urlPic;
-  String lastLogin;
-  String dateBirth;
-  String gender;
-  String userType;
+  String email = "-";
+  String userName = "-";
+  String urlPic = "-";
+  String lastLogin = "-";
+  String dateBirth = "-";
+  String gender = "-";
+  String userType = "-";
 
   User();
 

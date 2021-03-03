@@ -8,6 +8,7 @@ import 'package:digimagz/network/response/UserResponse.dart';
 import 'package:digimagz/preferences/AppPreference.dart';
 import 'package:digimagz/ui/home/fragment/profile/ProfileFragmentDelegate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http_parser/http_parser.dart';
 
 class ProfileFragmentPresenter extends BasePresenter{
   static const REQUEST_LOGOUT = 1;
@@ -43,13 +44,14 @@ class ProfileFragmentPresenter extends BasePresenter{
     var user = await AppPreference.getUser();
     var params = {
       "email" : user.email,
-      "picture" : MultipartFile.fromFileSync(avatar.path, filename: avatar.path.split("/").last)
+      "picture" : MultipartFile.fromFileSync(
+        avatar.path,
+        contentType: MediaType.parse("image/*"),
+      )
     };
 
-    var result = await repository.changeAvatar(CHANGE_AVATAR, params);
-    if(result != null){
-      _delegate.onSuccessChangeAvatar(result);
-    }
+    await repository.changeAvatar(CHANGE_AVATAR, params);
+    _delegate.onSuccessChangeAvatar();
   }
 
   void logout() async {

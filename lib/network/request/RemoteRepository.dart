@@ -100,6 +100,7 @@ class Repository extends BaseRepository {
     var response = await get("user/index_get", params, typeRequest);
 
     if(response != null){
+      print("API Get User : $response");
       return UserResponse.fromJson(jsonDecode(response.data));
     }
 
@@ -180,6 +181,7 @@ class Repository extends BaseRepository {
     var response = await post("user/index_post", params, typeRequest);
 
     if(response != null){
+      print("API Post User : $response");
       return User.fromJson(jsonDecode(response.data));
     }
 
@@ -210,10 +212,10 @@ class Repository extends BaseRepository {
   }
 
   Future<BaseResponse> changeAvatar(int typeRequest, Map<String, dynamic> params) async {
-    var response = await formData("user/avatar", params, typeRequest);
+    var response = await formData("user/avatar", params, typeRequest, throwOnResponseError: false);
 
     if(response != null){
-      return BaseResponse.fromJson(jsonDecode(response.data));
+      print(response);
     }
 
     return null;

@@ -207,16 +207,19 @@ class BaseRepository{
       _baseState.shouldHideLoading(typeRequest);
       return response;
     } on DioError catch(e){
-      if(e.type != DioErrorType.CANCEL) {
-        if(e.message.contains("SocketException")){
-          _baseState.shouldHideLoading(typeRequest);
-          _baseState.onNoConnection(typeRequest);
-        }else if(e.message.contains("504")){
-          _baseState.shouldHideLoading(typeRequest);
-          _baseState.onRequestTimeOut(typeRequest);
-        }else {
-          _baseState.shouldHideLoading(typeRequest);
-          _baseState.onUnknownError(typeRequest, e.message);
+      print("Error ${e.response.data}");
+      if(throwOnResponseError) {
+        if (e.type != DioErrorType.CANCEL) {
+          if (e.message.contains("SocketException")) {
+            _baseState.shouldHideLoading(typeRequest);
+            _baseState.onNoConnection(typeRequest);
+          } else if (e.message.contains("504")) {
+            _baseState.shouldHideLoading(typeRequest);
+            _baseState.onRequestTimeOut(typeRequest);
+          } else {
+            _baseState.shouldHideLoading(typeRequest);
+            _baseState.onUnknownError(typeRequest, e.message);
+          }
         }
       }
     } on ResponseException catch(e){
