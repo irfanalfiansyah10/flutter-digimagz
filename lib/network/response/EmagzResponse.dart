@@ -20,6 +20,7 @@ class EmagzData{
   String name;
   String linkPubHtml5;
   String linkQuiz;
+  String isPubActive;
 
   EmagzData.fromJson(Map<String, dynamic> json){
     idEmagz = obtainValue(json["ID_EMAGZ"], "");
@@ -29,5 +30,6 @@ class EmagzData{
     name = obtainValue(json["NAME"], "");
     linkPubHtml5 = obtainValue(json["LINK_PUBHTML5"], "");
     linkQuiz = obtainValue(json["LINK_QUIZ"], "");
+    isPubActive = obtainValue(json["IS_PUBACTIVE"], "");
   }
 }

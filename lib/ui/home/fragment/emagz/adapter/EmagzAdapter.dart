@@ -188,15 +188,38 @@ class _EmagzItemState extends BaseState<EmagzItem, EmagzAdapterPresenter> {
             ),
             MaterialButton(
               onPressed: (){
-                if(widget.data.linkPubHtml5.isNotEmpty) {
-                  navigateTo(MyApp.ROUTE_WEBVIEW, arguments: widget.data.linkPubHtml5);
+                if(widget.data.isPubActive == 't') {
+                  if(widget.data.linkPubHtml5.isNotEmpty) {
+                    navigateTo(MyApp.ROUTE_WEBVIEW, arguments: widget.data.linkPubHtml5);
+                  } else {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext c) => AlertDialog(
+                          title: Text("Pesan", style: TextStyle(fontSize: 20, color: Colors.black)),
+                          content: Text("Mohon hubungi administrator untuk melakukan pengecekan data pada menu ini.", style: TextStyle(fontSize: 16, color: Color(0x8a000000))),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text("OK"),
+                              onPressed: () {
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context);
+                                } else {
+                                  SystemNavigator.pop();
+                                }
+                              },
+                            )
+                          ],
+                        )
+                    );
+                  }
                 } else {
                   showDialog(
                       context: context,
                       barrierDismissible: true,
                       builder: (BuildContext c) => AlertDialog(
                         title: Text("Pesan", style: TextStyle(fontSize: 20, color: Colors.black)),
-                        content: Text("Mohon hubungi administrator untuk melakukan pengecekan data pada menu ini.", style: TextStyle(fontSize: 16, color: Color(0x8a000000))),
+                        content: Text("Fitur ini sedang dinonaktifkan oleh admin.", style: TextStyle(fontSize: 16, color: Color(0x8a000000))),
                         actions: <Widget>[
                           FlatButton(
                             child: Text("OK"),
