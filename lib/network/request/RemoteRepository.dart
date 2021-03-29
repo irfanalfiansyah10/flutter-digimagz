@@ -10,6 +10,7 @@ import 'package:digimagz/network/response/NewsResponse.dart';
 import 'package:digimagz/network/response/StoryResponse.dart';
 import 'package:digimagz/network/response/UserResponse.dart';
 import 'package:digimagz/network/response/YoutubeResponse.dart';
+import 'package:digimagz/network/response/TokenResponse.dart';
 import 'package:dio/dio.dart';
 
 class Repository extends BaseRepository {
@@ -132,6 +133,16 @@ class Repository extends BaseRepository {
 
     if(response != null){
       return EmagzResponse.fromJson(jsonDecode(response.data));
+    }
+
+    return null;
+  }
+
+  Future<TokenResponse> postToken(int typeRequest, Map<String, dynamic> params) async {
+    var response = await post("firebase_notif/register", params, typeRequest);
+
+    if(response != null){
+      return TokenResponse.fromJson(jsonDecode(response.data));
     }
 
     return null;
