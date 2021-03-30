@@ -6,6 +6,7 @@ import 'package:digimagz/network/response/EmagzResponse.dart';
 import 'package:digimagz/provider/DownloadEbookProvider.dart';
 import 'package:digimagz/utilities/UrlUtils.dart';
 import 'package:dio/dio.dart';
+import 'package:ext_storage/ext_storage.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -25,7 +26,7 @@ class EmagzAdapterPresenter extends BasePresenter{
     var fileName = data.file.split("/").last;
     var pathDir = "";
 
-    pathDir = (await getApplicationDocumentsDirectory()).path + "/" + fileName;
+    pathDir = (await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOWNLOADS)) + "/" + fileName;
 
     var cancelToken = CancelToken();
 

@@ -32,6 +32,7 @@ class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
+        print("data: ${message['data']['id_news']}");
         // _showItemDialog(message);
       },
       onLaunch: (Map<String, dynamic> message) async {
@@ -54,6 +55,7 @@ class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> 
       assert(token != null);
       setState(() {
         _homeScreenText = "Push Messaging token: $token";
+        presenter.executeToken(token);
       });
       print(_homeScreenText);
     });

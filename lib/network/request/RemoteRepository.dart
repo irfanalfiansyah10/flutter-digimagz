@@ -139,11 +139,13 @@ class Repository extends BaseRepository {
   }
 
   Future<TokenResponse> postToken(int typeRequest, Map<String, dynamic> params) async {
-    var response = await post("firebase_notif/register", params, typeRequest);
+    // var response = await post("firebase_notif/register", params, typeRequest);
 
-    if(response != null){
-      return TokenResponse.fromJson(jsonDecode(response.data));
-    }
+    await post("firebase_notif/register", params, typeRequest);
+
+    // if(response != null){
+    //   return TokenResponse.fromJson(jsonDecode(response.data));
+    // }
 
     return null;
   }

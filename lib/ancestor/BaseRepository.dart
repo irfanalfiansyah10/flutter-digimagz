@@ -199,8 +199,10 @@ class BaseRepository{
 
       if(throwOnResponseError) {
         var baseResponse = BaseResponse.fromJson(jsonDecode(response.data));
-        if (!baseResponse.status) {
-          throw ResponseException(msg: baseResponse.message);
+        if(url != "firebase_notif/register") {
+          if (!baseResponse.status) {
+            throw ResponseException(msg: baseResponse.message);
+          }
         }
       }
 

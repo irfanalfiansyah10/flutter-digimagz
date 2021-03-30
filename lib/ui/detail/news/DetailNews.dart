@@ -15,6 +15,7 @@ import 'package:digimagz/ui/detail/news/adapter/CommentAdapter.dart';
 import 'package:digimagz/ui/detail/news/adapter/ImageNewsAdapter.dart';
 import 'package:digimagz/ui/home/fragment/home/adapter/news/NewsAdapter.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
+import 'package:digimagz/utilities/UrlUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
@@ -341,7 +342,8 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
 
                         IconButton(icon: Icon(Icons.share, color: ColorUtils.primary),
                             onPressed: () async {
-                              await Share.share("Check out My Apps here");
+                              var url = UrlUtils.URL + "news/view/" + widget.news.idNews;
+                              await Share.share(url);
                               if(isUserLoggedIn){
                                 presenter.executePostShare(widget.news.idNews);
                               }
