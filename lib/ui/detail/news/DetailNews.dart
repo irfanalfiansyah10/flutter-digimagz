@@ -16,6 +16,7 @@ import 'package:digimagz/ui/detail/news/adapter/ImageNewsAdapter.dart';
 import 'package:digimagz/ui/home/fragment/home/adapter/news/NewsAdapter.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 import 'package:mcnmr_common_ext/FutureDelayed.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
@@ -243,12 +244,15 @@ class _DetailNewsState extends BaseState<DetailNews, DetailNewsPresenter> implem
                 SizedBox(height: 20),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(widget.news.contentNewsIos,
-                    textScaleFactor: 1.0,
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
+                  child: Html(
+                    data: widget.news.contentNews,
                   ),
+                  // child: Text(widget.news.contentNewsIos,
+                  //   textScaleFactor: 1.0,
+                  //   style: TextStyle(
+                  //     fontSize: 12,
+                  //   ),
+                  // ),
                 ),
                 SizedBox(height: 10),
                 Padding(

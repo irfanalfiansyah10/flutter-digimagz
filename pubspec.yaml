@@ -52,7 +52,7 @@ dependencies:
   webview_flutter: ^1.0.7
   flutter_local_notifications: 1.4.4+5
   overlay_support: 1.0.5
-
+  flutter_html: ^0.11.1
 
 dev_dependencies:
   moor_generator: ^2.0.1
