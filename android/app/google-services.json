@@ -1,82 +1,94 @@
 {
   "project_info": {
-    "project_number": "454702289920",
-    "firebase_url": "https://com-project-digimagz.firebaseio.com",
-    "project_id": "com-project-digimagz",
-    "storage_bucket": "com-project-digimagz.appspot.com"
+    "project_number": "210648783864",
+    "firebase_url": "https://digimagz-fccc4.firebaseio.com",
+    "project_id": "digimagz-fccc4",
+    "storage_bucket": "digimagz-fccc4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:454702289920:android:b9f7f6d5a43a2c716234e5",
-        "android_client_info": {
-          "package_name": "com.example.digimagz"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "454702289920-a7vs4m19epff4c3h0mbog92scoc2avek.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.digimagz",
-            "certificate_hash": "6c13f68d06f9ea656e282421cbef6ae0e43764a1"
-          }
-        },
-        {
-          "client_id": "454702289920-76gpgo0h3l7b1lvitbi4gnk9km16f636.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBFz4EA0owwLMxDqGBjxxlMITnDt3FZvmQ"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "454702289920-76gpgo0h3l7b1lvitbi4gnk9km16f636.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "454702289920-4dk0cn5l4ca33np4q0pi8n0dg3gdh70b.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.digimagz"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:454702289920:android:b189b96be17d7e9a6234e5",
+        "mobilesdk_app_id": "1:210648783864:android:dd34093c831bc996b2d40d",
         "android_client_info": {
           "package_name": "com.project.digimagz"
         }
       },
       "oauth_client": [
         {
-          "client_id": "454702289920-76gpgo0h3l7b1lvitbi4gnk9km16f636.apps.googleusercontent.com",
+          "client_id": "210648783864-26l97l9i5jb3hn37dvuk5ib2qd1h1p0f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.digimagz",
+            "certificate_hash": "73c30cf096c145c98ccdbe0d9a2b17a6758d2635"
+          }
+        },
+        {
+          "client_id": "210648783864-2fs0qmtbvelncsf3nkb737nak5e822d6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.digimagz",
+            "certificate_hash": "284c37df3a16183ed023a9115f2126da48e2266f"
+          }
+        },
+        {
+          "client_id": "210648783864-8aa50ghttbe1pk6l14p4bav1dvdunsil.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.digimagz",
+            "certificate_hash": "b1ac2820b138edf5975333086e1409288d2a6e39"
+          }
+        },
+        {
+          "client_id": "210648783864-b0endmijp86m2vrtf0a5s0vjf9bctks9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.digimagz",
+            "certificate_hash": "638362d44b87e9b1e1bcdf38325f026688f94d7f"
+          }
+        },
+        {
+          "client_id": "210648783864-grk1fi1faatsreh7l6miagaf1s6acpop.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.digimagz",
+            "certificate_hash": "a13eb93ea86872b18eea229ae2e8b07cd911b96a"
+          }
+        },
+        {
+          "client_id": "210648783864-m3aui0seat6jrb0i0uhgsfs1mbvf82es.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.digimagz",
+            "certificate_hash": "ce4aedd57ff33ac76acde6adeeaf34a9f9c1c94b"
+          }
+        },
+        {
+          "client_id": "210648783864-njfghso8cpit9vf2och0c855rk96g3t6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.digimagz",
+            "certificate_hash": "6c13f68d06f9ea656e282421cbef6ae0e43764a1"
+          }
+        },
+        {
+          "client_id": "210648783864-8a1h7oh31ims03mk2bju8fsjsg516vqe.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBFz4EA0owwLMxDqGBjxxlMITnDt3FZvmQ"
+          "current_key": "AIzaSyDQkG-ABdlhSuBRrkazMd09hgsGK9XbqI0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "454702289920-76gpgo0h3l7b1lvitbi4gnk9km16f636.apps.googleusercontent.com",
+              "client_id": "210648783864-8a1h7oh31ims03mk2bju8fsjsg516vqe.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "454702289920-4dk0cn5l4ca33np4q0pi8n0dg3gdh70b.apps.googleusercontent.com",
+              "client_id": "210648783864-2afe47gmiokqte9m8fclns5pned5ei87.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.digimagz"
