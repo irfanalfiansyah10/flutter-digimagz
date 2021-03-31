@@ -1,11 +1,12 @@
+import 'dart:io';
 import 'dart:ui';
-import 'dart:async';
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/main.dart';
 import 'package:digimagz/ui/splash_screen/SplashScreenPresenter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mcnmr_common_ext/FutureDelayed.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -13,51 +14,55 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> {
-  String _homeScreenText = "Waiting for token...";
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  Future<Map<PermissionGroup, PermissionStatus>> permissionsAndroid() async =>
+      await PermissionHandler().requestPermissions([PermissionGroup.camera, PermissionGroup.storage]);
+
+  Future<Map<PermissionGroup, PermissionStatus>> permissionsIos() async =>
+      await PermissionHandler().requestPermissions([PermissionGroup.camera]);
 
   @override
   SplashScreenPresenter initPresenter() => SplashScreenPresenter(this);
 
   @override
-  void afterWidgetBuilt() {
-    delay(2500, () async {
-      navigateTo(MyApp.ROUTE_HOME, singleTop: true);
-    });
+  void afterWidgetBuilt() async {
+    if(Platform.isAndroid) {
+      var permissionResult = await permissionsAndroid();
+      if(permissionResult[PermissionGroup.camera] == PermissionStatus.granted
+          && permissionResult[PermissionGroup.storage] == PermissionStatus.granted){
+        delay(2500, () async {
+          navigateTo(MyApp.ROUTE_HOME, singleTop: true);
+        });
+      }
+    } else {
+      var permissionResult = await permissionsIos();
+      if(permissionResult[PermissionGroup.camera] == PermissionStatus.granted){
+        delay(2500, () async {
+          navigateTo(MyApp.ROUTE_HOME, singleTop: true);
+        });
+      }
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        print("data: ${message['data']['id_news']}");
-        // _showItemDialog(message);
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-        // _navigateToItemDetail(message);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        // _navigateToItemDetail(message);
-      },
-    );
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(
-            sound: true, badge: true, alert: true, provisional: true));
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      print("Settings registered: $settings");
+    FirebaseMessaging.onMessage.listen((event) {
+      print("onMessage: ${event.data}");
+      print("data: ${event.data['id_news']}");
+      // _showItemDialog(message);
     });
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      print("onLaunch: ${event.notification}");
+      // _navigateToItemDetail(message);
+    });
+
+    _firebaseMessaging.requestPermission();
     _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
-      setState(() {
-        _homeScreenText = "Push Messaging token: $token";
-        presenter.executeToken(token);
-      });
-      print(_homeScreenText);
+      print("Push Messaging token: $token");
+      presenter.executeToken(token);
     });
   }
 

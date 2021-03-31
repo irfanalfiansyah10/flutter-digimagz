@@ -1,6 +1,6 @@
 import 'package:digimagz/ancestor/BasePresenter.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
-import 'package:digimagz/network/response/UserResponse.dart';
+import 'package:digimagz/network/response/UserResponse.dart' as response;
 import 'package:digimagz/preferences/AppPreference.dart';
 import 'package:digimagz/ui/login/LoginDelegate.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,13 +21,13 @@ class LoginPresenter extends BasePresenter{
       var signIn = await GoogleSignIn().signIn();
       var auth = await signIn.authentication;
 
-      var credential = GoogleAuthProvider.getCredential(
+      var credential = GoogleAuthProvider.credential(
           idToken: auth.idToken, accessToken: auth.accessToken
       );
 
       var user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
 
-      _checkUser(user.email, user.displayName, user.photoUrl);
+      _checkUser(user.email, user.displayName, user.photoURL);
     }on Exception catch(e){
       Fluttertoast.showToast(msg: e.toString());
     }
@@ -50,11 +50,11 @@ class LoginPresenter extends BasePresenter{
           break;
       }
 
-      var credential = FacebookAuthProvider.getCredential(accessToken: signIn.accessToken.token);
+      var credential = FacebookAuthProvider.credential(signIn.accessToken.token);
 
       var user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
 
-      _checkUser(user.email, user.displayName, user.photoUrl);
+      _checkUser(user.email, user.displayName, user.photoURL);
     }on Exception catch(e){
       Fluttertoast.showToast(msg: e.toString());
     }
@@ -81,7 +81,7 @@ class LoginPresenter extends BasePresenter{
     };
 
     await repository.postUser(REQUEST_POST_USER, postUserParams);
-    var newUser = User()
+    var newUser = response.User()
       ..email = email
       ..userName = name
       ..urlPic = picUrl;

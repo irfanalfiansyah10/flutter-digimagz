@@ -1,4 +1,3 @@
-import 'package:digimagz/firebase/PushNotificationManager.dart';
 import 'package:digimagz/provider/DownloadEbookProvider.dart';
 import 'package:digimagz/provider/LikeProvider.dart';
 import 'package:digimagz/ui/detail/news/DetailNews.dart';
@@ -11,6 +10,7 @@ import 'package:digimagz/ui/login_email/LoginEmail.dart';
 import 'package:digimagz/ui/splash_screen/SplashScreen.dart';
 import 'package:digimagz/ui/webview/WebView.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,9 +19,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 //export PATH="$PATH:/Users/apple/Documents/flutter/bin"
 
 void main() async {
-  PushNotificationsManager().initialize();
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferences.getInstance();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 

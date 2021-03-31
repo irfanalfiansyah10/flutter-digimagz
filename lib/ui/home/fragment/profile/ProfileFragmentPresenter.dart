@@ -4,11 +4,11 @@ import 'package:digimagz/ancestor/BasePresenter.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:dio/dio.dart';
 import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
-import 'package:digimagz/network/response/UserResponse.dart';
 import 'package:digimagz/preferences/AppPreference.dart';
 import 'package:digimagz/ui/home/fragment/profile/ProfileFragmentDelegate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:digimagz/network/response/UserResponse.dart' as response;
 
 class ProfileFragmentPresenter extends BasePresenter{
   static const REQUEST_LOGOUT = 1;
@@ -19,12 +19,12 @@ class ProfileFragmentPresenter extends BasePresenter{
 
   ProfileFragmentPresenter(BaseState state, this._delegate) : super(state);
 
-  void getAccount(RequestWrapper<User> userWrapper) async {
+  void getAccount(RequestWrapper<response.User> userWrapper) async {
     userWrapper.doRequestKeepState();
     userWrapper.finishRequestIfNotNull(await AppPreference.getUser());
   }
 
-  void getAccountFromAPI(RequestWrapper<User> userWrapper) async {
+  void getAccountFromAPI(RequestWrapper<response.User> userWrapper) async {
     userWrapper.doRequestKeepState();
     var user = await AppPreference.getUser();
     var params = {"email" : user.email};
