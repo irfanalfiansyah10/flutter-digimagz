@@ -21,13 +21,13 @@ class LoginPresenter extends BasePresenter{
       var signIn = await GoogleSignIn().signIn();
       var auth = await signIn.authentication;
 
-      var credential = GoogleAuthProvider.credential(
+      var credential = GoogleAuthProvider.getCredential(
           idToken: auth.idToken, accessToken: auth.accessToken
       );
 
       var user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
 
-      _checkUser(user.email, user.displayName, user.photoURL);
+      _checkUser(user.email, user.displayName, user.photoUrl);
     }on Exception catch(e){
       Fluttertoast.showToast(msg: e.toString());
     }
@@ -50,11 +50,11 @@ class LoginPresenter extends BasePresenter{
           break;
       }
 
-      var credential = FacebookAuthProvider.credential(signIn.accessToken.token);
+      var credential = FacebookAuthProvider.getCredential(accessToken: signIn.accessToken.token);
 
       var user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
 
-      _checkUser(user.email, user.displayName, user.photoURL);
+      _checkUser(user.email, user.displayName, user.photoUrl);
     }on Exception catch(e){
       Fluttertoast.showToast(msg: e.toString());
     }

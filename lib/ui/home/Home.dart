@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:digimagz/ancestor/BaseState.dart';
+import 'package:digimagz/extension/LocalNotification.dart';
 import 'package:digimagz/main.dart';
 import 'package:digimagz/preferences/AppPreference.dart';
 import 'package:digimagz/ui/home/HomePresenter.dart';
@@ -112,6 +113,11 @@ class _HomeState extends BaseState<Home, HomePresenter> {
     }
 
     setState(() => _currentPosition = newPosition);
+  }
+
+  Future<dynamic> onBackgroundMessage(Map<String, dynamic> message) {
+    print("onBackgroundMessage: $message");
+    return LocalNotification.showNotification(message);
   }
 }
 
