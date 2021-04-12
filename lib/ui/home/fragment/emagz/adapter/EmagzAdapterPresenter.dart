@@ -26,7 +26,11 @@ class EmagzAdapterPresenter extends BasePresenter{
     var fileName = data.file.split("/").last;
     var pathDir = "";
 
-    pathDir = (await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOWNLOADS)) + "/" + fileName;
+    if(Platform.isAndroid) {
+      pathDir = (await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOWNLOADS)) + "/" + fileName;
+    } else if(Platform.isIOS) {
+      pathDir = (await getApplicationDocumentsDirectory()).path + "/" + fileName;
+    }
 
     var cancelToken = CancelToken();
 
