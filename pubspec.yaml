@@ -31,8 +31,8 @@ dependencies:
   shimmer: 1.1.2
   cached_network_image: 2.0.0
   intl: 0.16.1
-  flutter_svg: 0.19.0
-  url_launcher: 5.7.10
+  flutter_svg: ^0.20.0-nullsafety.3
+  url_launcher: ^6.0.3
   flutter_youtube: 2.0.0+1
   mcnmr_request_wrapper: 0.0.6
   mcnmr_common_ext:
@@ -49,7 +49,7 @@ dependencies:
   firebase_messaging: 6.0.13
   flutter_facebook_login:
   google_sign_in: 4.0.0
-  webview_flutter: ^0.3.20
+  webview_flutter: ^2.0.4
   flutter_local_notifications: 1.4.4+5
   overlay_support: 1.0.5
   flutter_html: ^0.11.1

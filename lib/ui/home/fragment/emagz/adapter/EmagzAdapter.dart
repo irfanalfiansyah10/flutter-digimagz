@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/custom/view/text/StyledText.dart';
@@ -14,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:digimagz/extension/Size.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EmagzItem extends StatefulWidget {
   final EmagzData data;
@@ -190,7 +193,11 @@ class _EmagzItemState extends BaseState<EmagzItem, EmagzAdapterPresenter> {
               onPressed: (){
                 if(widget.data.isPubActive == 't') {
                   if(widget.data.linkPubHtml5.isNotEmpty) {
-                    navigateTo(MyApp.ROUTE_WEBVIEW, arguments: widget.data.linkPubHtml5);
+                    if(Platform.isAndroid) {
+                      navigateTo(MyApp.ROUTE_WEBVIEW, arguments: widget.data.linkPubHtml5);
+                    } else if(Platform.isIOS) {
+                      _launchURL(widget.data.linkPubHtml5);
+                    }
                   } else {
                     showDialog(
                         context: context,
@@ -253,7 +260,11 @@ class _EmagzItemState extends BaseState<EmagzItem, EmagzAdapterPresenter> {
             MaterialButton(
               onPressed: (){
                 if(widget.data.linkQuiz.isNotEmpty) {
-                  navigateTo(MyApp.ROUTE_WEBVIEW, arguments: widget.data.linkQuiz);
+                  if(Platform.isAndroid) {
+                    navigateTo(MyApp.ROUTE_WEBVIEW, arguments: widget.data.linkQuiz);
+                  } else if(Platform.isIOS) {
+                    _launchURL(widget.data.linkQuiz);
+                  }
                 } else {
                   showDialog(
                       context: context,
@@ -314,3 +325,5 @@ class ShimmerEmagz extends StatelessWidget {
   }
 }
 
+void _launchURL(_url) async =>
+    await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
