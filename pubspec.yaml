@@ -48,13 +48,15 @@ dependencies:
   firebase_core: 0.4.0+9
   firebase_messaging: 6.0.13
   flutter_facebook_login:
-  google_sign_in: 4.0.0
+  google_sign_in: ^4.5.9
   webview_flutter: ^2.0.4
   flutter_local_notifications: 1.4.4+5
   overlay_support: 1.0.5
   flutter_html: ^0.11.1
   ext_storage: ^1.0.3
   permission_handler: ^3.0.0
+  get_version: ^0.2.2
+  package_info: ^0.4.0+13
 
 dev_dependencies:
   moor_generator: ^2.0.1

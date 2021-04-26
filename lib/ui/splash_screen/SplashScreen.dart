@@ -6,8 +6,11 @@ import 'package:digimagz/main.dart';
 import 'package:digimagz/ui/splash_screen/SplashScreenPresenter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get_version/get_version.dart';
 import 'package:mcnmr_common_ext/FutureDelayed.dart';
+import 'package:package_info/package_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -107,6 +110,20 @@ class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> 
     //   print("Push Messaging token: $token");
     //   presenter.executeToken(token);
     // });
+
+    if(Platform.isAndroid) {
+      PackageInfo.fromPlatform().then((PackageInfo packageInfo) => {
+        print('Version ID: ${packageInfo.appName}')
+      });
+    } else if(Platform.isIOS) {
+      GetVersion.projectCode.then((String version) {
+        print('Version ID: $version');
+      });
+    }
+
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) => {
+      print('Version ID: ${packageInfo.packageName}')
+    });
   }
 
   @override
