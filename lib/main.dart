@@ -23,7 +23,7 @@ import 'extension/LocalNotification.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferences.getInstance();
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 

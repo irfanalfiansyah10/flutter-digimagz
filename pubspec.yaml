@@ -44,11 +44,11 @@ dependencies:
   path_provider: 1.6.27
   open_file: 3.0.3
   moor_flutter: 2.0.0
-  firebase_auth: 0.14.0+5
-  firebase_core: 0.4.0+9
-  firebase_messaging: 6.0.13
+  firebase_auth: 0.20.0+1
+  firebase_core: 0.7.0
+  firebase_messaging: 8.0.0-dev.14
   flutter_facebook_login:
-  google_sign_in: 4.0.0
+  google_sign_in: ^4.5.9
   webview_flutter: ^2.0.4
   flutter_local_notifications: 1.4.4+5
   overlay_support: 1.0.5

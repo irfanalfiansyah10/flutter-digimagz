@@ -4,6 +4,7 @@ import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/extension/LocalNotification.dart';
 import 'package:digimagz/main.dart';
 import 'package:digimagz/ui/splash_screen/SplashScreenPresenter.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -59,38 +60,70 @@ class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> 
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
 
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        print("data: ${message['data']['id_news']}");
-        showNotification(message['notification']['title'], message['notification']['body']);
-        // LocalNotification.showNotification(message);
-        // _showItemDialog(message);
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-        // _navigateToItemDetail(message);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        // _navigateToItemDetail(message);
-      },
-    );
+    FirebaseMessaging.onMessage.listen((event) {
+      print("onMessage: $event");
+      print("data: ${event.data['id_news']}");
+      showNotification(event.notification.title, event.notification.body);
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      print("onMessage: $event");
+      print("data: ${event.data['id_news']}");
+      showNotification(event.notification.title, event.notification.body);
+    });
+
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(
             sound: true, badge: true, alert: true, provisional: true));
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      print("Settings registered: $settings");
-    });
+    // _firebaseMessaging.onIosSettingsRegistered
+    //     .listen((IosNotificationSettings settings) {
+    //   print("Settings registered: $settings");
+    // });
+    _firebaseMessaging.deleteToken();
     _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
-      setState(() {
-        _homeScreenText = "Push Messaging token: $token";
-        presenter.executeToken(token);
-      });
-      print(_homeScreenText);
+      print("Push Messaging token: $token");
+      presenter.executeToken(token);
     });
+
+    _firebaseMessaging.getAPNSToken().then((String token) {
+      assert(token != null);
+      print("APN Messaging token: $token");
+    });
+
+    // _firebaseMessaging.configure(
+    //   onMessage: (Map<String, dynamic> message) async {
+    //     print("onMessage: $message");
+    //     print("data: ${message['data']['id_news']}");
+    //     showNotification(message['notification']['title'], message['notification']['body']);
+    //     // LocalNotification.showNotification(message);
+    //     // _showItemDialog(message);
+    //   },
+    //   onLaunch: (Map<String, dynamic> message) async {
+    //     print("onLaunch: $message");
+    //     // _navigateToItemDetail(message);
+    //   },
+    //   onResume: (Map<String, dynamic> message) async {
+    //     print("onResume: $message");
+    //     // _navigateToItemDetail(message);
+    //   },
+    // );
+    // _firebaseMessaging.requestNotificationPermissions(
+    //     const IosNotificationSettings(
+    //         sound: true, badge: true, alert: true, provisional: true));
+    // _firebaseMessaging.onIosSettingsRegistered
+    //     .listen((IosNotificationSettings settings) {
+    //   print("Settings registered: $settings");
+    // });
+    // _firebaseMessaging.getToken().then((String token) {
+    //   assert(token != null);
+    //   setState(() {
+    //     _homeScreenText = "Push Messaging token: $token";
+    //     presenter.executeToken(token);
+    //   });
+    //   print(_homeScreenText);
+    // });
+
     // FirebaseMessaging.onMessage.listen((event) {
     //   print("onMessage: ${event.data}");
     //   print("data: ${event.data['id_news']}");
@@ -101,12 +134,6 @@ class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> 
     //   // _navigateToItemDetail(message);
     // });
     //
-    // _firebaseMessaging.requestPermission();
-    // _firebaseMessaging.getToken().then((String token) {
-    //   assert(token != null);
-    //   print("Push Messaging token: $token");
-    //   presenter.executeToken(token);
-    // });
   }
 
   @override
