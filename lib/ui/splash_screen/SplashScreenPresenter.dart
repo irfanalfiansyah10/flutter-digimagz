@@ -15,4 +15,9 @@ class SplashScreenPresenter extends BasePresenter {
       print("postToken: $result");
     }
   }
+
+  Future<String> executeGetVersion() async {
+    var response = await repository.getVersion(0);
+    return response.data.version;
+  }
 }

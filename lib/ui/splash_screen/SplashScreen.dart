@@ -1,15 +1,15 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:digimagz/ancestor/BaseState.dart';
-import 'package:digimagz/extension/LocalNotification.dart';
 import 'package:digimagz/main.dart';
+import 'package:digimagz/network/response/VersionResponse.dart';
 import 'package:digimagz/ui/splash_screen/SplashScreenPresenter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get_version/get_version.dart';
 import 'package:mcnmr_common_ext/FutureDelayed.dart';
+import 'package:mcnmr_request_wrapper/RequestWrapper.dart';
 import 'package:package_info/package_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -19,6 +19,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> {
+  RequestWrapper<VersionResponse> _versionWrapper = RequestWrapper();
   String _homeScreenText = "Waiting for token...";
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -34,12 +35,32 @@ class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> 
 
   @override
   void afterWidgetBuilt() async {
+    String buildNumberServer;
+    String buildNumber;
+
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      print('Package Name: ${packageInfo.packageName}');
+      print('Build Number: ${packageInfo.buildNumber}');
+
+      buildNumber = packageInfo.buildNumber;
+    });
+
+    presenter.executeGetVersion().then((String version) {
+      buildNumberServer = version;
+    });
+
     if(Platform.isAndroid) {
       var permissionResult = await permissionsAndroid();
       if(permissionResult[PermissionGroup.storage] == PermissionStatus.granted){
         delay(2500, () async {
-          navigateTo(MyApp.ROUTE_HOME, singleTop: true);
+          if(buildNumber == buildNumberServer) {
+            navigateTo(MyApp.ROUTE_HOME, singleTop: true);
+          } else {
+            navigateTo(MyApp.ROUTE_UPDATE, singleTop: true);
+          }
         });
+      } else {
+        SystemNavigator.pop();
       }
     } else {
       var permissionResult = await permissionsIos();
@@ -50,6 +71,21 @@ class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> 
       }
     }
   }
+
+  @override
+  void onNoConnection(int typeRequest) => delay(5000, () => presenter.executeGetVersion());
+
+  @override
+  void onRequestTimeOut(int typeRequest) => delay(5000, () => presenter.executeGetVersion());
+
+  @override
+  void onUnknownError(int typeRequest, String msg) => delay(5000, () => presenter.executeGetVersion());
+
+  @override
+  void shouldHideLoading(int typeRequest) {}
+
+  @override
+  void shouldShowLoading(int typeRequest) {}
 
   @override
   void initState() {
@@ -111,19 +147,15 @@ class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> 
     //   presenter.executeToken(token);
     // });
 
-    if(Platform.isAndroid) {
-      PackageInfo.fromPlatform().then((PackageInfo packageInfo) => {
-        print('Version ID: ${packageInfo.appName}')
-      });
-    } else if(Platform.isIOS) {
-      GetVersion.projectCode.then((String version) {
-        print('Version ID: $version');
-      });
-    }
-
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) => {
-      print('Version ID: ${packageInfo.packageName}')
-    });
+    // if(Platform.isAndroid) {
+    //   PackageInfo.fromPlatform().then((PackageInfo packageInfo) => {
+    //     print('Version ID: ${packageInfo.appName}')
+    //   });
+    // } else if(Platform.isIOS) {
+    //   GetVersion.projectCode.then((String version) {
+    //     print('Version ID: $version');
+    //   });
+    // }
   }
 
   @override

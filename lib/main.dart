@@ -8,6 +8,7 @@ import 'package:digimagz/ui/list/news/ListNews.dart';
 import 'package:digimagz/ui/login/Login.dart';
 import 'package:digimagz/ui/login_email/LoginEmail.dart';
 import 'package:digimagz/ui/splash_screen/SplashScreen.dart';
+import 'package:digimagz/ui/update/Update.dart';
 import 'package:digimagz/ui/webview/WebView.dart';
 import 'package:digimagz/utilities/ColorUtils.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
   static const ROUTE_LOGIN_EMAIL = "/loginEmail";
   static const ROUTE_FILL_PERSONAL_DATA = "/fillPersonalData";
   static const ROUTE_WEBVIEW = "/webview";
+  static const ROUTE_UPDATE= "/update";
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +75,8 @@ class MyApp extends StatelessWidget {
               return CupertinoPageRoute(builder: (ctx) => FillPersonalData());
             case ROUTE_WEBVIEW :
               return CupertinoPageRoute(builder: (ctx) => WebView(settings.arguments));
+            case ROUTE_UPDATE :
+              return CupertinoPageRoute(builder: (ctx) => Update());
             default :
               return CupertinoPageRoute(builder: (ctx) => SplashScreen());
           }

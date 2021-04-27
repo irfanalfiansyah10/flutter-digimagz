@@ -9,12 +9,23 @@ import 'package:digimagz/network/response/NewsCoverStoryResponse.dart';
 import 'package:digimagz/network/response/NewsResponse.dart';
 import 'package:digimagz/network/response/StoryResponse.dart';
 import 'package:digimagz/network/response/UserResponse.dart';
+import 'package:digimagz/network/response/VersionResponse.dart';
 import 'package:digimagz/network/response/YoutubeResponse.dart';
 import 'package:digimagz/network/response/TokenResponse.dart';
 import 'package:dio/dio.dart';
 
 class Repository extends BaseRepository {
   Repository(BaseState baseState) : super(baseState);
+
+  Future<VersionResponse> getVersion(int typeRequest) async {
+    var response = await get("dummy/version", null, typeRequest);
+
+    if(response != null){
+      return VersionResponse.fromJson(jsonDecode(response.data));
+    }
+
+    return null;
+  }
 
   Future<NewsResponse> getNews(int typeRequest, {CancelToken cancelToken}) async {
     var response = await get("dummy/index_get", null, typeRequest, cancelToken: cancelToken);
