@@ -66,7 +66,11 @@ class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> 
       var permissionResult = await permissionsIos();
       if(permissionResult[PermissionGroup.camera] == PermissionStatus.granted){
         delay(2500, () async {
-          navigateTo(MyApp.ROUTE_HOME, singleTop: true);
+          if(buildNumber == buildNumberServer) {
+            navigateTo(MyApp.ROUTE_HOME, singleTop: true);
+          } else {
+            navigateTo(MyApp.ROUTE_UPDATE, singleTop: true);
+          }
         });
       }
     }
