@@ -36,6 +36,12 @@
 				<string>fb733494387113231</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.210648783864-em86g8psnjb9sqt6mcbtoucjtsmkp2vk</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
@@ -48,6 +54,8 @@
 	<key>FacebookDisplayName</key>
 	<string>Digimagz</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>FirebaseAutomaticScreenReportingEnabled</key>
 	<false/>
 	<key>FirebaseScreenReportingEnabled</key>
 	<true/>

@@ -38,17 +38,18 @@ dependencies:
   mcnmr_common_ext:
   mcnmr_wrap_height_gridview:
   pull_to_refresh: 1.6.4
-  provider: 4.0.0
+  provider: ^4.3.2+2
   image_picker: 0.6.7+22
   share: 0.6.5+4
   path_provider: 1.6.27
   open_file: 3.0.3
   moor_flutter: 2.0.0
-  firebase_auth: 0.14.0+5
-  firebase_core: 0.4.0+9
+  firebase_auth: ^0.18.3
+  firebase_core: ^0.5.2
   firebase_messaging: 6.0.13
   flutter_facebook_login:
   google_sign_in: ^4.5.9
+  the_apple_sign_in: ^1.1.1
   webview_flutter: ^2.0.4
   flutter_local_notifications: 1.4.4+5
   overlay_support: 1.0.5
@@ -91,6 +92,7 @@ flutter:
   - assets/images/ic_youtube.svg
   - assets/images/ic_facebook.svg
   - assets/images/ic_google.svg
+  - assets/images/ic_apple.svg
   - assets/images/missing_avatar.jpg
   - assets/images/mqdefault.jpg
 

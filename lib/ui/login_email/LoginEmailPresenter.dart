@@ -17,7 +17,7 @@ class LoginEmailPresenter extends BasePresenter {
 
   void checkEmailAvailability(String email) async {
     state.shouldShowLoading(REQUEST_CHECK_EMAIL_AVAILABILITY);
-    var result = await _auth.fetchSignInMethodsForEmail(email: email);
+    var result = await _auth.fetchSignInMethodsForEmail(email);
     state.shouldHideLoading(REQUEST_CHECK_EMAIL_AVAILABILITY);
 
     if(result.length > 0){
@@ -58,12 +58,12 @@ class LoginEmailPresenter extends BasePresenter {
     state.shouldShowLoading(REQUEST_CREATE_USER);
     var user = (await _auth.createUserWithEmailAndPassword(email: email, password: password)).user;
 
-    var updateInfo = UserUpdateInfo();
-    updateInfo.displayName = name;
+    // var updateInfo = UserUpdateInfo();
+    // updateInfo.displayName = name;
 
-    await user.updateProfile(updateInfo);
+    await user.updateProfile(displayName: name);
     await user.reload();
-    user = await _auth.currentUser();
+    user = await _auth.currentUser;
 
     state.shouldHideLoading(REQUEST_CREATE_USER);
 

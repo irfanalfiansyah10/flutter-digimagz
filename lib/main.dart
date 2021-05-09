@@ -1,3 +1,4 @@
+import 'package:digimagz/extension/AppleSignInAvailable.dart';
 import 'package:digimagz/provider/DownloadEbookProvider.dart';
 import 'package:digimagz/provider/LikeProvider.dart';
 import 'package:digimagz/ui/detail/news/DetailNews.dart';
@@ -24,8 +25,12 @@ import 'extension/LocalNotification.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferences.getInstance();
-  // await Firebase.initializeApp();
-  runApp(MyApp());
+  await Firebase.initializeApp();
+  final appleSignInAvailable = await AppleSignInAvailable.check();
+  runApp(Provider<AppleSignInAvailable>.value(
+      value: appleSignInAvailable,
+      child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

@@ -3,10 +3,13 @@ import 'package:digimagz/ancestor/BaseState.dart';
 import 'package:digimagz/network/response/UserResponse.dart' as response;
 import 'package:digimagz/preferences/AppPreference.dart';
 import 'package:digimagz/ui/login/LoginDelegate.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
 class LoginPresenter extends BasePresenter{
   static const REQUEST_POST_USER = 0;
@@ -30,6 +33,7 @@ class LoginPresenter extends BasePresenter{
       _checkUser(user.email, user.displayName, user.photoUrl);
     }on Exception catch(e){
       Fluttertoast.showToast(msg: e.toString());
+      print("executeSignInGoogle: ${e.toString()}");
     }
   }
 
@@ -50,13 +54,62 @@ class LoginPresenter extends BasePresenter{
           break;
       }
 
-      var credential = FacebookAuthProvider.getCredential(accessToken: signIn.accessToken.token);
+      var credential = FacebookAuthProvider.getCredential(signIn.accessToken.token);
 
       var user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
 
       _checkUser(user.email, user.displayName, user.photoUrl);
     }on Exception catch(e){
       Fluttertoast.showToast(msg: e.toString());
+      print("executeSignInFacebook: ${e.toString()}");
+    }
+  }
+
+  void executeSignInApple() async {
+    try {
+      final result = await TheAppleSignIn.performRequests(
+          [
+            AppleIdRequest(
+                requestedScopes: [
+                  Scope.email,
+                  Scope.fullName
+                ]
+            )
+          ]
+      );
+
+      print("executeSignInApple: ${result.status}");
+
+      switch(result.status) {
+        case AuthorizationStatus.authorized:
+          print("userAppleId: ${result.credential.user}");
+
+          final appleIdCredential = result.credential;
+          final oAuthProvider = OAuthProvider('apple.com');
+          final credential = oAuthProvider.credential(
+              idToken: String.fromCharCodes(appleIdCredential.identityToken),
+              accessToken: String.fromCharCodes(appleIdCredential.authorizationCode)
+          );
+          var user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+          _checkUser(user.email, user.displayName, user.photoUrl);
+          break;
+        case AuthorizationStatus.error:
+          throw PlatformException(
+            code: 'ERROR_AUTHORIZATION_DENIED',
+            message: result.error.toString(),
+          );
+
+        case AuthorizationStatus.cancelled:
+          throw PlatformException(
+            code: 'ERROR_ABORTED_BY_USER',
+            message: 'Sign in aborted by user',
+          );
+        default:
+          throw UnimplementedError();
+      }
+    }on Exception catch(e){
+      Fluttertoast.showToast(msg: e.toString());
+      print("executeSignInApple: ${e.toString()}");
     }
   }
 

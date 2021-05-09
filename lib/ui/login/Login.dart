@@ -135,6 +135,28 @@ class _LoginState extends BaseState<Login, LoginPresenter> implements LoginDeleg
                             )
                           ],
                         ),
+                      ),
+                      FlatButton(
+                        color: Colors.black,
+                        onPressed: (){
+                          presenter.executeSignInApple();
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            SvgPicture.asset("assets/images/ic_apple.svg", width: 24, height: 24,),
+                            Expanded(
+                              child: Text("Sign in with apple",
+                                textAlign: TextAlign.center,
+                                textScaleFactor: 1.0,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       )
                     ],
                   ),

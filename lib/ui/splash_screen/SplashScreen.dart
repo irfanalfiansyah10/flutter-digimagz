@@ -53,7 +53,7 @@ class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> 
       var permissionResult = await permissionsAndroid();
       if(permissionResult[PermissionGroup.storage] == PermissionStatus.granted){
         delay(2500, () async {
-          if(buildNumber == buildNumberServer) {
+          if(int.parse(buildNumber) >= int.parse(buildNumberServer)) {
             navigateTo(MyApp.ROUTE_HOME, singleTop: true);
           } else {
             navigateTo(MyApp.ROUTE_UPDATE, singleTop: true);
@@ -64,15 +64,22 @@ class _SplashScreenState extends BaseState<SplashScreen, SplashScreenPresenter> 
       }
     } else {
       var permissionResult = await permissionsIos();
-      if(permissionResult[PermissionGroup.camera] == PermissionStatus.granted){
-        delay(2500, () async {
-          if(buildNumber == buildNumberServer) {
-            navigateTo(MyApp.ROUTE_HOME, singleTop: true);
-          } else {
-            navigateTo(MyApp.ROUTE_UPDATE, singleTop: true);
-          }
-        });
-      }
+      delay(2500, () async {
+        if(int.parse(buildNumber) >= int.parse(buildNumberServer)) {
+          navigateTo(MyApp.ROUTE_HOME, singleTop: true);
+        } else {
+          navigateTo(MyApp.ROUTE_UPDATE, singleTop: true);
+        }
+      });
+      // if(permissionResult[PermissionGroup.camera] == PermissionStatus.granted){
+      //   delay(2500, () async {
+      //     if(int.parse(buildNumber) >= int.parse(buildNumberServer)) {
+      //       navigateTo(MyApp.ROUTE_HOME, singleTop: true);
+      //     } else {
+      //       navigateTo(MyApp.ROUTE_UPDATE, singleTop: true);
+      //     }
+      //   });
+      // }
     }
   }
 
